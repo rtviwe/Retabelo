@@ -1,0 +1,20 @@
+package rtviwe.com.retabelo.database.food
+
+import android.arch.persistence.room.Database
+import android.arch.persistence.room.Room
+import android.arch.persistence.room.RoomDatabase
+import android.content.Context
+import rtviwe.com.retabelo.database.SingletonHolder
+
+@Database(entities = [FoodEntry::class], version = 1, exportSchema = false)
+abstract class FoodDatabase : RoomDatabase() {
+
+    companion object : SingletonHolder<FoodDatabase, Context>({
+        Room.databaseBuilder(it.applicationContext,
+                FoodDatabase::class.java,
+                "Food.db")
+                .build()
+    })
+
+    abstract fun foodDao(): FoodDao
+}
