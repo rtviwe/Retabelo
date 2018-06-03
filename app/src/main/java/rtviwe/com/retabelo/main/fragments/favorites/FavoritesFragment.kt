@@ -7,35 +7,36 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.favorites_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.favorite.FavoriteDatabase
 import rtviwe.com.retabelo.main.fragments.BaseFragment
 
 
-class FavoritesFragment : BaseFragment(), FavoritesAdapter.FavoriteClickListener{
+class FavoritesFragment : BaseFragment() {
 
     override val layoutId = R.layout.favorites_fragment
 
     private lateinit var database: FavoriteDatabase
-
     private lateinit var favoritesAdapter: FavoritesAdapter
+
+    private var subscribe: Disposable? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         database = FavoriteDatabase.getInstance(activity!!.applicationContext)
-        favoritesAdapter = FavoritesAdapter(activity!!.applicationContext, this)
+        favoritesAdapter = FavoritesAdapter(activity!!.applicationContext)
 
-        recycler_view_favorites.apply {
-            addItemDecoration(DividerItemDecoration(activity?.applicationContext, VERTICAL))
-            layoutManager = LinearLayoutManager(context)
-            adapter = favoritesAdapter
-        }
+        setupRecyclerView()
 
         val viewModel = ViewModelProviders.of(this).get(FavoritesViewModel::class.java)
         viewModel.favorites.observe(this, Observer {
             favoritesAdapter.favorites = it
         })
+
+        setupItemClick()
 
         // Это временно для генерации песен
         /*AppExecutors.instance.diskIO().execute({
@@ -43,11 +44,18 @@ class FavoritesFragment : BaseFragment(), FavoritesAdapter.FavoriteClickListener
         })*/
     }
 
-    override fun onFavoriteClickListener(itemId: Int) {
-
+    private fun setupRecyclerView() {
+        recycler_view_favorites.apply {
+            addItemDecoration(DividerItemDecoration(activity?.applicationContext, VERTICAL))
+            layoutManager = LinearLayoutManager(context)
+            adapter = favoritesAdapter
+        }
     }
 
-    override fun onTrashClickListener(itemId: Int) {
+    private fun setupItemClick() {
+        subscribe = favoritesAdapter.clickEvent
+                .subscribe({
 
+                })
     }
 }

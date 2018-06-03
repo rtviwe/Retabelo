@@ -7,12 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.food.FoodEntry
 
-class FoodsAdapter(private val context: Context,
-                   private val itemClickListener: ItemClickListener)
+class FoodsAdapter(private val context: Context)
     : RecyclerView.Adapter<FoodsAdapter.FavoriteViewHolder>() {
+
+    private val clickSubject = PublishSubject.create<FoodEntry>()
+    val clickEvent: Observable<FoodEntry> = clickSubject
 
     private var _foods: List<FoodEntry>? = null
 
@@ -31,29 +35,26 @@ class FoodsAdapter(private val context: Context,
     }
 
     override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
-        holder.name.text = foods!![position].name
-        holder.imageView.setImageResource(R.drawable.ic_receipt_black_24dp)
+        holder.bind(foods!![position])
     }
 
     override fun getItemCount(): Int = if (foods != null) foods!!.size else 0
 
-    interface ItemClickListener {
-
-        fun onItemClickListener(itemId: Int)
-    }
-
     inner class FavoriteViewHolder(itemView: View)
-        : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        : RecyclerView.ViewHolder(itemView) {
+
+        private var imageView: ImageView = itemView.findViewById(R.id.image_view_photo_food)
+        private var name: TextView = itemView.findViewById(R.id.text_view_name)
 
         init {
-            itemView.setOnClickListener(this)
+            itemView.setOnClickListener {
+                clickSubject.onNext(foods!![adapterPosition])
+            }
         }
 
-        var imageView: ImageView = itemView.findViewById(R.id.image_view_photo_food)
-        var name: TextView = itemView.findViewById(R.id.text_view_name)
-
-        override fun onClick(view: View?) {
-            itemClickListener.onItemClickListener(foods!![adapterPosition].id)
+        fun bind(foodEntry: FoodEntry) {
+            name.text = foodEntry.name
+            imageView.setImageResource(R.drawable.ic_receipt_black_24dp)
         }
     }
 }

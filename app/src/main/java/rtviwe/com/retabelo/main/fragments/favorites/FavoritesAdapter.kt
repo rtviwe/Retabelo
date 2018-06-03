@@ -7,12 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.favorite.FavoriteEntry
 
-class FavoritesAdapter(private val context: Context,
-                    private val favoriteClickListener: FavoriteClickListener)
+class FavoritesAdapter(private val context: Context)
     : RecyclerView.Adapter<FavoritesAdapter.FavoriteViewHolder>() {
+
+    private val clickSubject = PublishSubject.create<FavoriteEntry>()
+    val clickEvent: Observable<FavoriteEntry> = clickSubject
 
     private var _favorites: List<FavoriteEntry>? = null
 
@@ -31,33 +35,28 @@ class FavoritesAdapter(private val context: Context,
     }
 
     override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
-        holder.name.text = favorites!![position].name
-        holder.imageView.setImageResource(R.drawable.ic_favorite_black_24dp)
-        holder.trashView.setImageResource(R.drawable.ic_delete_black_24dp)
+        holder.bind(favorites!![position])
     }
 
     override fun getItemCount(): Int = if (favorites != null) favorites!!.size else 0
 
-    interface FavoriteClickListener {
-
-        fun onFavoriteClickListener(itemId: Int)
-        fun onTrashClickListener(itemId: Int)
-    }
-
     inner class FavoriteViewHolder(itemView: View)
-        : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-
-        init {
-            itemView.setOnClickListener(this)
-        }
+        : RecyclerView.ViewHolder(itemView) {
 
         var imageView: ImageView = itemView.findViewById(R.id.image_view_favorite_photo)
         var name: TextView = itemView.findViewById(R.id.text_view_favorite_name)
         var trashView: ImageView = itemView.findViewById(R.id.image_view_trash_photo)
 
-        override fun onClick(view: View?) {
-            favoriteClickListener.onFavoriteClickListener(favorites!![adapterPosition].id)
-            favoriteClickListener.onTrashClickListener(favorites!![adapterPosition].id)
+        init {
+            itemView.setOnClickListener {
+                clickSubject.onNext(favorites!![adapterPosition])
+            }
+        }
+
+        fun bind(favoriteEntry: FavoriteEntry) {
+            imageView.setImageResource(R.drawable.ic_favorite_black_24dp)
+            name.text = favoriteEntry.name
+            trashView.setImageResource(R.drawable.ic_delete_black_24dp)
         }
     }
 }
