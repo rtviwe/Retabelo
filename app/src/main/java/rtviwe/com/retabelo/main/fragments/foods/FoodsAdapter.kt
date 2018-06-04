@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.food.FoodEntry
@@ -47,9 +49,9 @@ class FoodsAdapter(private val context: Context)
         private var name: TextView = itemView.findViewById(R.id.text_view_name)
 
         init {
-            itemView.setOnClickListener {
-                clickSubject.onNext(foods!![adapterPosition])
-            }
+            RxView.clicks(itemView)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { clickSubject.onNext(foods!![adapterPosition]) }
         }
 
         fun bind(foodEntry: FoodEntry) {

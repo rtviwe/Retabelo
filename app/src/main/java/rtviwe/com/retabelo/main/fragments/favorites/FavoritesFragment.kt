@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.View
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -22,6 +23,7 @@ class FavoritesFragment : BaseFragment() {
     private lateinit var favoritesAdapter: FavoritesAdapter
 
     private var subscribe: Disposable? = null
+    private var subscribeOnTrash: Disposable? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,20 +32,18 @@ class FavoritesFragment : BaseFragment() {
         favoritesAdapter = FavoritesAdapter(activity!!.applicationContext)
 
         setupRecyclerView()
+        setupItemClicks()
 
         val viewModel = ViewModelProviders.of(this).get(FavoritesViewModel::class.java)
         viewModel.recipeDao.getFavoriteRecipes()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    favoritesAdapter.favorites = it
-                }
-
-        setupItemClick()
+                .subscribe { favoritesAdapter.favorites = it }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         subscribe?.dispose()
+        subscribeOnTrash?.dispose()
     }
 
     private fun setupRecyclerView() {
@@ -54,8 +54,13 @@ class FavoritesFragment : BaseFragment() {
         }
     }
 
-    private fun setupItemClick() {
+    private fun setupItemClicks() {
         subscribe = favoritesAdapter.clickEvent
-                .subscribe { }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { Log.v("ITEM", "$it") }
+
+        subscribeOnTrash = favoritesAdapter.clickEventOnTrash
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { Log.v("TRASH", "$it") }
     }
 }

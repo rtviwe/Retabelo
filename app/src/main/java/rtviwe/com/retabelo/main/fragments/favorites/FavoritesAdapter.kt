@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.recipe.RecipeEntry
@@ -17,6 +19,9 @@ class FavoritesAdapter(private val context: Context)
 
     private val clickSubject = PublishSubject.create<RecipeEntry>()
     val clickEvent: Observable<RecipeEntry> = clickSubject
+
+    private val clickSubjectOnTrash = PublishSubject.create<RecipeEntry>()
+    val clickEventOnTrash: Observable<RecipeEntry> = clickSubjectOnTrash
 
     private var _favorites: List<RecipeEntry>? = null
 
@@ -48,10 +53,13 @@ class FavoritesAdapter(private val context: Context)
         var trashView: ImageView = itemView.findViewById(R.id.image_view_trash_photo)
 
         init {
+            RxView.clicks(itemView)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { clickSubject.onNext(favorites!![adapterPosition]) }
 
-            itemView.setOnClickListener {
-                clickSubject.onNext(favorites!![adapterPosition])
-            }
+            RxView.clicks(trashView)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { clickSubjectOnTrash.onNext(favorites!![adapterPosition]) }
         }
 
         fun bind(favoriteEntry: RecipeEntry) {

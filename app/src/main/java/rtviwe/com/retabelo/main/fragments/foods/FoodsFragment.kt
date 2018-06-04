@@ -59,14 +59,9 @@ class FoodsFragment : BaseFragment() {
                                 target: RecyclerView.ViewHolder) = false
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                val foods = foodsAdapter.foods!!
-                val position = viewHolder.adapterPosition
-                val deletedFood = foods[position]
-
-                viewModel.deleteFood(deletedFood)
+                viewModel.deleteFood(viewHolder.adapterPosition, foodsAdapter)
             }
         }).attachToRecyclerView(recycler_view_foods)
-
     }
 
     override fun onDestroy() {
@@ -91,11 +86,13 @@ class FoodsFragment : BaseFragment() {
 
     private fun setupItemClick() {
         subscribe = foodsAdapter.clickEvent
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { Log.v("ITEM", "$it") }
     }
 
     private fun setupFab() {
-        RxView.clicks(fab).observeOn(AndroidSchedulers.mainThread())
+        RxView.clicks(fab)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { Log.v("FAB", "$it") }
     }
 }
