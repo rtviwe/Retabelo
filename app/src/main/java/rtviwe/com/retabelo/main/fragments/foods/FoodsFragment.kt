@@ -1,6 +1,5 @@
 package rtviwe.com.retabelo.main.fragments.foods
 
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.widget.DividerItemDecoration
@@ -8,16 +7,19 @@ import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import com.jakewharton.rxbinding2.support.design.widget.RxFloatingActionButton
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
+import com.jakewharton.rxbinding2.view.RxView
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.foods_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.food.FoodDatabase
 import rtviwe.com.retabelo.main.fragments.BaseFragment
-import rtviwe.com.retabelo.utils.AppExecutors
+
 
 class FoodsFragment : BaseFragment() {
 
@@ -36,37 +38,35 @@ class FoodsFragment : BaseFragment() {
         foodsAdapter = FoodsAdapter(activity!!.applicationContext)
 
         setupRecyclerView()
+        setupItemClick()
+        setupFab()
+
+        val viewModel = ViewModelProviders.of(this).get(FoodsViewModel::class.java)
+        viewModel.foodsDao.getAllFood()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { foodsAdapter.foods = it }
+
+        // Временно для генерации продуктов
+        /*Flowable.just(FoodEntry(0, "Milk", FoodType.WATER),
+                FoodEntry(0, "Bread", FoodType.BREAD),
+                FoodEntry(0, "Butter", FoodType.GROCERY))
+                .observeOn(Schedulers.io())
+                .subscribe { viewModel.foodsDao.insertFood(it) }*/
 
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-                                target: RecyclerView.ViewHolder): Boolean {
-                return false
-            }
+                                target: RecyclerView.ViewHolder) = false
 
-            // заменить на rx
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                 val foods = foodsAdapter.foods!!
                 val position = viewHolder.adapterPosition
+                val deletedFood = foods[position]
 
-                AppExecutors.instance.diskIO().execute({
-                    database.foodDao().deleteFood(foods[position])
-                })
+                viewModel.deleteFood(deletedFood)
             }
         }).attachToRecyclerView(recycler_view_foods)
 
-        val viewModel = ViewModelProviders.of(this).get(FoodsViewModel::class.java)
-        viewModel.foods.observe(this, Observer {
-            foodsAdapter.foods = it
-        })
-
-        setupItemClick()
-
-        // Это временно для генерации песен
-        /*AppExecutors.instance.diskIO().execute({
-                database.foodDao().insertFood(FoodEntry(0, Random().nextInt(10).toString(), "food"))
-        })*/
     }
 
     override fun onDestroy() {
@@ -91,8 +91,11 @@ class FoodsFragment : BaseFragment() {
 
     private fun setupItemClick() {
         subscribe = foodsAdapter.clickEvent
-                .subscribe({
+                .subscribe { Log.v("ITEM", "$it") }
+    }
 
-                })
+    private fun setupFab() {
+        RxView.clicks(fab).observeOn(AndroidSchedulers.mainThread())
+                .subscribe { Log.v("FAB", "$it") }
     }
 }

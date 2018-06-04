@@ -1,7 +1,7 @@
 package rtviwe.com.retabelo.database.food
 
-import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
+import io.reactivex.Flowable
 
 @Dao
 interface FoodDao {
@@ -10,10 +10,13 @@ interface FoodDao {
     fun insertFood(foodEntry: FoodEntry)
 
     @Query("SELECT * FROM food")
-    fun getAllFood(): LiveData<List<FoodEntry>>
+    fun getAllFood(): Flowable<List<FoodEntry>>
 
     @Query("SELECT * FROM food WHERE id = :id")
-    fun getFoodById(id: Int): LiveData<FoodEntry>
+    fun getFoodById(id: Int): Flowable<List<FoodEntry>>
+
+    @Query("DELETE FROM food")
+    fun nukeFoodTable()
 
     @Update
     fun updateFood(foodEntry: FoodEntry)

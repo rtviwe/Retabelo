@@ -8,5 +8,5 @@ data class FoodEntry(
         @PrimaryKey(autoGenerate = true)
         var id: Int,
         var name: String,
-        var description: String
+        var foodType: FoodType
 )

@@ -16,7 +16,6 @@ import rtviwe.com.retabelo.main.fragments.recommendations.RecommendationsFragmen
 class MainActivity : AppCompatActivity() {
 
     private val CURRENT_FRAGMENT_ID = "Current fragment"
-    private val LOG_TAG = MainActivity::class.java.simpleName
 
     private lateinit var foodDatabase: FoodDatabase
     private var currentFragmentId = R.id.action_recommendations
@@ -29,8 +28,10 @@ class MainActivity : AppCompatActivity() {
 
         RxBottomNavigationView.itemSelections(bottom_navigation as BottomNavigationView).subscribe {
             val currentFragmentId = it.itemId
-            val fragment = getFragmentFromId(currentFragmentId)
-            setFragmentToContainer(fragment)
+            if (currentFragmentId != bottom_navigation.selectedItemId) {
+                val fragment = getFragmentFromId(currentFragmentId)
+                setFragmentToContainer(fragment)
+            }
         }
     }
 

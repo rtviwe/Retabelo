@@ -10,15 +10,15 @@ import android.widget.TextView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import rtviwe.com.retabelo.R
-import rtviwe.com.retabelo.database.favorite.FavoriteEntry
+import rtviwe.com.retabelo.database.recipe.RecipeEntry
 
 class FavoritesAdapter(private val context: Context)
     : RecyclerView.Adapter<FavoritesAdapter.FavoriteViewHolder>() {
 
-    private val clickSubject = PublishSubject.create<FavoriteEntry>()
-    val clickEvent: Observable<FavoriteEntry> = clickSubject
+    private val clickSubject = PublishSubject.create<RecipeEntry>()
+    val clickEvent: Observable<RecipeEntry> = clickSubject
 
-    private var _favorites: List<FavoriteEntry>? = null
+    private var _favorites: List<RecipeEntry>? = null
 
     var favorites
         set(value) {
@@ -48,12 +48,13 @@ class FavoritesAdapter(private val context: Context)
         var trashView: ImageView = itemView.findViewById(R.id.image_view_trash_photo)
 
         init {
+
             itemView.setOnClickListener {
                 clickSubject.onNext(favorites!![adapterPosition])
             }
         }
 
-        fun bind(favoriteEntry: FavoriteEntry) {
+        fun bind(favoriteEntry: RecipeEntry) {
             imageView.setImageResource(R.drawable.ic_favorite_black_24dp)
             name.text = favoriteEntry.name
             trashView.setImageResource(R.drawable.ic_delete_black_24dp)
