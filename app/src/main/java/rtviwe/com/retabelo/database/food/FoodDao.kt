@@ -10,10 +10,13 @@ interface FoodDao {
     fun insertFood(foodEntry: FoodEntry)
 
     @Query("SELECT * FROM food")
-    fun getAllFood(): DataSource.Factory<Int, FoodEntry>
+    fun getAllFoods(): DataSource.Factory<Int, FoodEntry>
 
     @Query("SELECT * FROM food WHERE id = :id")
-    fun getFoodById(id: Int): DataSource.Factory<Int, FoodEntry>
+    fun getFoodsById(id: Int): DataSource.Factory<Int, FoodEntry>
+
+    @Query("SELECT * FROM food WHERE foodType = :foodType")
+    fun getFoodsByType(foodType: FoodType): DataSource.Factory<Int, FoodEntry>
 
     @Update
     fun updateFood(foodEntry: FoodEntry)
