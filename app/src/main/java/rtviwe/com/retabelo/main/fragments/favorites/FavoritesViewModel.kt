@@ -16,6 +16,8 @@ class FavoritesViewModel(app: Application) : AndroidViewModel(app) {
     private val recipesDatabase: RecipeDatabase = RecipeDatabase.getInstance(this.getApplication())
     private val recipesDao: RecipeDao = recipesDatabase.recipeDao()
 
+    private var removedLastFavorite: RecipeEntry? = null
+
     val recipesList: Flowable<PagedList<RecipeEntry>> = RxPagedListBuilder(
             recipesDao.getAllFavoriteRecipes(),
             50
@@ -25,7 +27,18 @@ class FavoritesViewModel(app: Application) : AndroidViewModel(app) {
         Flowable.just(recipeEntry)
                 .observeOn(Schedulers.io())
                 .subscribe {
-                    recipesDao.deleteRecipe(recipeEntry)
+                    recipesDao.deleteRecipe(it)
+                    removedLastFavorite = it
                 }
+    }
+
+    fun restoreLastFavorite() {
+        removedLastFavorite.let {
+            Flowable.just(removedLastFavorite)
+                    .observeOn(Schedulers.io())
+                    .subscribe {
+                        recipesDao.insertRecipe(it!!)
+                    }
+        }
     }
 }

@@ -16,6 +16,8 @@ class FoodsViewModel(app: Application) : AndroidViewModel(app) {
     private val foodDatabase: FoodDatabase = FoodDatabase.getInstance(getApplication())
     private val foodsDao: FoodDao = foodDatabase.foodDao()
 
+    private var removedLastFood: FoodEntry? = null
+
     val foodsList: Flowable<PagedList<FoodEntry>> = RxPagedListBuilder(
             foodsDao.getAllFoods(),
             50
@@ -25,7 +27,7 @@ class FoodsViewModel(app: Application) : AndroidViewModel(app) {
         Flowable.just(foodEntry)
                 .observeOn(Schedulers.io())
                 .subscribe {
-                    foodsDao.insertFood(foodEntry)
+                    foodsDao.insertFood(it)
                 }
     }
 
@@ -33,7 +35,19 @@ class FoodsViewModel(app: Application) : AndroidViewModel(app) {
         Flowable.just(foodEntry)
                 .observeOn(Schedulers.io())
                 .subscribe {
-                    foodsDao.deleteFood(foodEntry)
+                    foodsDao.deleteFood(it)
+                    removedLastFood = it
                 }
+    }
+
+    fun restoreFood() {
+        removedLastFood.let {
+            Flowable.just(removedLastFood)
+                    .observeOn(Schedulers.io())
+                    .subscribe {
+                        foodsDao.insertFood(it!!)
+                        removedLastFood = null
+                    }
+        }
     }
 }

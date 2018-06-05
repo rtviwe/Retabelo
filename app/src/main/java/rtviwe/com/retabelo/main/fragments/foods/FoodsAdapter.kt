@@ -29,7 +29,7 @@ class FoodsAdapter(private val context: Context)
     }
 
     override fun onBindViewHolder(holder: FoodViewHolder, position: Int) {
-        holder.bindTo(getItem(position) as FoodEntry)
+        holder.bindTo(getItem(position))
     }
 
     inner class FoodViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

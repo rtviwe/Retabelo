@@ -32,7 +32,7 @@ class FavoritesAdapter(private val context: Context)
     }
 
     override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
-        holder.bindTo(getItem(position) as RecipeEntry)
+        holder.bindTo(getItem(position))
     }
 
     inner class FavoriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
