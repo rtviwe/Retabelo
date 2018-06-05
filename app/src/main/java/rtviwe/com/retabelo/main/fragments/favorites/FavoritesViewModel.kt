@@ -2,23 +2,30 @@ package rtviwe.com.retabelo.main.fragments.favorites
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
+import android.arch.paging.PagedList
+import android.arch.paging.RxPagedListBuilder
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.schedulers.Schedulers
 import rtviwe.com.retabelo.database.recipe.RecipeDao
 import rtviwe.com.retabelo.database.recipe.RecipeDatabase
+import rtviwe.com.retabelo.database.recipe.RecipeEntry
 
 class FavoritesViewModel(app: Application) : AndroidViewModel(app) {
 
-    var recipeDatabase: RecipeDatabase = RecipeDatabase.getInstance(this.getApplication())
-    var recipeDao: RecipeDao = recipeDatabase.recipeDao()
+    private val recipesDatabase: RecipeDatabase = RecipeDatabase.getInstance(this.getApplication())
+    private val recipesDao: RecipeDao = recipesDatabase.recipeDao()
 
-    fun removeFromFavorite(position: Int, adapter: FavoritesAdapter) {
-        Flowable.just(position)
+    val recipesList: Flowable<PagedList<RecipeEntry>> = RxPagedListBuilder(
+            recipesDao.getAllFavoriteRecipes(),
+            50
+    ).buildFlowable(BackpressureStrategy.LATEST)
+
+    fun removeFromFavorite(recipeEntry: RecipeEntry) {
+        Flowable.just(recipeEntry)
                 .observeOn(Schedulers.io())
                 .subscribe {
-                    val favorites = adapter.favorites!!
-                    val deletedFavorite = favorites[position]
-                    recipeDao.deleteRecipe(deletedFavorite)
+                    recipesDao.deleteRecipe(recipeEntry)
                 }
     }
 }

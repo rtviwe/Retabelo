@@ -1,7 +1,7 @@
 package rtviwe.com.retabelo.database.recipe
 
+import android.arch.paging.DataSource
 import android.arch.persistence.room.*
-import io.reactivex.Flowable
 
 @Dao
 interface RecipeDao {
@@ -10,20 +10,23 @@ interface RecipeDao {
     fun insertRecipe(recipeEntry: RecipeEntry)
 
     @Query("SELECT * FROM recipe")
-    fun getAllRecipes(): Flowable<List<RecipeEntry>>
+    fun getAllRecipes(): DataSource.Factory<Int, RecipeEntry>
 
     @Query("SELECT * FROM recipe WHERE id = :id")
-    fun getRecipeById(id: Int): Flowable<List<RecipeEntry>>
+    fun getRecipeById(id: Int): DataSource.Factory<Int, RecipeEntry>
 
     @Query("SELECT * FROM recipe WHERE isFavorite = 1")
-    fun getFavoriteRecipes(): Flowable<List<RecipeEntry>>
+    fun getAllFavoriteRecipes(): DataSource.Factory<Int, RecipeEntry>
 
-    @Query("DELETE FROM recipe")
-    fun nukeRecipeTable()
+    @Query("SELECT * FROM recipe WHERE isFavorite = 1 AND id = :id")
+    fun getFavoriteRecipeById(id: Int): DataSource.Factory<Int, RecipeEntry>
 
     @Update
     fun updateRecipe(recipeEntry: RecipeEntry)
 
     @Delete
     fun deleteRecipe(recipeEntry: RecipeEntry)
+
+    @Query("DELETE FROM recipe")
+    fun nukeRecipeTable()
 }

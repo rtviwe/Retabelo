@@ -8,7 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.favorites_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.recipe.RecipeDatabase
@@ -19,48 +19,56 @@ class FavoritesFragment : BaseFragment() {
 
     override val layoutId = R.layout.favorites_fragment
 
-    private lateinit var recipeDatabase: RecipeDatabase
+    private lateinit var recipesDatabase: RecipeDatabase
     private lateinit var favoritesAdapter: FavoritesAdapter
 
-    private var subscribe: Disposable? = null
-    private var subscribeOnTrash: Disposable? = null
+    private val disposablePaging = CompositeDisposable()
+    private val disposableClicking = CompositeDisposable()
+    private val disposableTrash = CompositeDisposable()
+    private lateinit var viewModel: FavoritesViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recipeDatabase = RecipeDatabase.getInstance(activity!!.applicationContext)
+        recipesDatabase = RecipeDatabase.getInstance(activity!!.applicationContext)
         favoritesAdapter = FavoritesAdapter(activity!!.applicationContext)
+        viewModel = ViewModelProviders.of(this).get(FavoritesViewModel::class.java)
 
-        setupRecyclerView()
-        setupItemClicks()
+        initRecyclerView()
+    }
 
-        val viewModel = ViewModelProviders.of(this).get(FavoritesViewModel::class.java)
-        viewModel.recipeDao.getFavoriteRecipes()
+    override fun onStart() {
+        super.onStart()
+
+        disposablePaging.add(viewModel.recipesList.subscribe {
+            favoritesAdapter.submitList(it)
+        })
+
+        disposableClicking.add(favoritesAdapter.clickEvent
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { favoritesAdapter.favorites = it }
+                .subscribe {
+                    Log.v("ITEM", "$it")
+                })
+
+        disposableTrash.add(favoritesAdapter.clickEventOnTrash
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    Log.v("TRASH", "$it")
+                })
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        subscribe?.dispose()
-        subscribeOnTrash?.dispose()
+    override fun onStop() {
+        super.onStop()
+        disposablePaging.dispose()
+        disposableClicking.dispose()
+        disposableTrash.dispose()
     }
 
-    private fun setupRecyclerView() {
+    private fun initRecyclerView() {
         recycler_view_favorites.apply {
             addItemDecoration(DividerItemDecoration(activity?.applicationContext, VERTICAL))
             layoutManager = LinearLayoutManager(context)
             adapter = favoritesAdapter
         }
-    }
-
-    private fun setupItemClicks() {
-        subscribe = favoritesAdapter.clickEvent
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { Log.v("ITEM", "$it") }
-
-        subscribeOnTrash = favoritesAdapter.clickEventOnTrash
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { Log.v("TRASH", "$it") }
     }
 }

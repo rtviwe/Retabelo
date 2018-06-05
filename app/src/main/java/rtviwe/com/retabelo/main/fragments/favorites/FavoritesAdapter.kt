@@ -1,5 +1,6 @@
 package rtviwe.com.retabelo.main.fragments.favorites
 
+import android.arch.paging.PagedListAdapter
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -7,30 +8,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
+import kotlinx.android.synthetic.main.favorite_list_item.view.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.recipe.RecipeEntry
+import rtviwe.com.retabelo.main.DiffCallbackForFavorite
 
 class FavoritesAdapter(private val context: Context)
-    : RecyclerView.Adapter<FavoritesAdapter.FavoriteViewHolder>() {
+    : PagedListAdapter<RecipeEntry, FavoritesAdapter.FavoriteViewHolder>(DiffCallbackForFavorite) {
 
     private val clickSubject = PublishSubject.create<RecipeEntry>()
     val clickEvent: Observable<RecipeEntry> = clickSubject
 
     private val clickSubjectOnTrash = PublishSubject.create<RecipeEntry>()
     val clickEventOnTrash: Observable<RecipeEntry> = clickSubjectOnTrash
-
-    private var _favorites: List<RecipeEntry>? = null
-
-    var favorites
-        set(value) {
-            _favorites = value
-            notifyDataSetChanged()
-        }
-        get() = _favorites
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
         val view = LayoutInflater.from(context)
@@ -40,29 +32,20 @@ class FavoritesAdapter(private val context: Context)
     }
 
     override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
-        holder.bind(favorites!![position])
+        holder.bindTo(getItem(position) as RecipeEntry)
     }
 
-    override fun getItemCount(): Int = if (favorites != null) favorites!!.size else 0
+    inner class FavoriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    inner class FavoriteViewHolder(itemView: View)
-        : RecyclerView.ViewHolder(itemView) {
+        private val imageView: ImageView = itemView.image_view_favorite_photo
+        private val name: TextView = itemView.text_view_favorite_name
+        private val trashView: ImageView = itemView.image_view_trash_photo
 
-        var imageView: ImageView = itemView.findViewById(R.id.image_view_favorite_photo)
-        var name: TextView = itemView.findViewById(R.id.text_view_favorite_name)
-        var trashView: ImageView = itemView.findViewById(R.id.image_view_trash_photo)
+        lateinit var favoriteRecipe: RecipeEntry
 
-        init {
-            RxView.clicks(itemView)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { clickSubject.onNext(favorites!![adapterPosition]) }
+        fun bindTo(favoriteEntry: RecipeEntry?) {
+            this.favoriteRecipe = favoriteEntry!!
 
-            RxView.clicks(trashView)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { clickSubjectOnTrash.onNext(favorites!![adapterPosition]) }
-        }
-
-        fun bind(favoriteEntry: RecipeEntry) {
             imageView.setImageResource(R.drawable.ic_favorite_black_24dp)
             name.text = favoriteEntry.name
             trashView.setImageResource(R.drawable.ic_delete_black_24dp)

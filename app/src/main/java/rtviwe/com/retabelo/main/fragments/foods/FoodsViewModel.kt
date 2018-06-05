@@ -14,20 +14,18 @@ import rtviwe.com.retabelo.database.food.FoodEntry
 class FoodsViewModel(app: Application) : AndroidViewModel(app) {
 
     private val foodDatabase: FoodDatabase = FoodDatabase.getInstance(getApplication())
-    val foodsDao: FoodDao = foodDatabase.foodDao()
+    private val foodsDao: FoodDao = foodDatabase.foodDao()
 
     val foodsList: Flowable<PagedList<FoodEntry>> = RxPagedListBuilder(
             foodsDao.getAllFood(),
-            42
+            50
     ).buildFlowable(BackpressureStrategy.LATEST)
 
-    fun deleteFood(position: Int, foodsAdapter: FoodsAdapter) {
-        Flowable.just(position)
+    fun deleteFood(foodEntry: FoodEntry) {
+        Flowable.just(foodEntry)
                 .observeOn(Schedulers.io())
                 .subscribe {
-                    val foods = foodsAdapter.foods!!
-                    val selectedFood = foods[position]
-                    foodsDao.deleteFood(selectedFood)
+                    foodsDao.deleteFood(foodEntry)
                 }
     }
 }
