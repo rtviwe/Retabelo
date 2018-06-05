@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+    apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
 
@@ -55,4 +55,7 @@ dependencies {
     implementation 'android.arch.persistence.room:runtime:1.1.0'
     implementation 'android.arch.persistence.room:rxjava2:1.1.0'
     kapt 'android.arch.persistence.room:compiler:1.1.0'
+
+    implementation 'android.arch.paging:runtime:1.0.0'
+    implementation 'android.arch.paging:rxjava2:1.0.0-rc1'
 }

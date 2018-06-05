@@ -14,7 +14,7 @@ import com.jakewharton.rxbinding2.support.design.widget.RxFloatingActionButton
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.foods_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.food.FoodDatabase
@@ -27,8 +27,10 @@ class FoodsFragment : BaseFragment() {
 
     private lateinit var database: FoodDatabase
     private lateinit var foodsAdapter: FoodsAdapter
+    private lateinit var viewModel: FoodsViewModel
 
-    private var subscribe: Disposable? = null
+    private var disposableClicking = CompositeDisposable()
+    private val disposablePaging = CompositeDisposable()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,21 +39,27 @@ class FoodsFragment : BaseFragment() {
         database = FoodDatabase.getInstance(activity!!.applicationContext)
         foodsAdapter = FoodsAdapter(activity!!.applicationContext)
 
-        setupRecyclerView()
-        setupItemClick()
-        setupFab()
-
-        val viewModel = ViewModelProviders.of(this).get(FoodsViewModel::class.java)
-        viewModel.foodsDao.getAllFood()
+        viewModel = ViewModelProviders.of(this).get(FoodsViewModel::class.java)
+        viewModel.foodsList
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { foodsAdapter.foods = it }
+                .subscribe {
+                    foodsAdapter.foods = it
+                }
+
+        setupRecyclerView()
+
+        RxView.clicks(fab)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    Log.v("FAB", "$it")
+                }
 
         // Временно для генерации продуктов
         /*Flowable.just(FoodEntry(0, "Milk", FoodType.WATER),
-                FoodEntry(0, "Bread", FoodType.BREAD),
-                FoodEntry(0, "Butter", FoodType.GROCERY))
+                      FoodEntry(0, "Bread", FoodType.BREAD),
+                      FoodEntry(0, "Butter", FoodType.GROCERY))
                 .observeOn(Schedulers.io())
-                .subscribe { viewModel.foodsDao.insertFood(it) }*/
+                .disposableClicking { viewModel.foodsDao.insertFood(it) }*/
 
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
@@ -64,9 +72,24 @@ class FoodsFragment : BaseFragment() {
         }).attachToRecyclerView(recycler_view_foods)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        subscribe?.dispose()
+    override fun onStart() {
+        super.onStart()
+
+        disposablePaging.add(viewModel.foodsList.subscribe {
+            foodsAdapter.submitList(it)
+        })
+
+        disposableClicking.add(foodsAdapter.clickEvent
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    Log.v("ITEM", "$it")
+                })
+    }
+
+    override fun onStop() {
+        super.onStop()
+        disposablePaging.dispose()
+        disposableClicking.dispose()
     }
 
     private fun setupRecyclerView() {
@@ -82,17 +105,5 @@ class FoodsFragment : BaseFragment() {
             else if (it.dy() > 0 && fab.isShown)
                 RxFloatingActionButton.visibility(fab).accept(false)
         }
-    }
-
-    private fun setupItemClick() {
-        subscribe = foodsAdapter.clickEvent
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { Log.v("ITEM", "$it") }
-    }
-
-    private fun setupFab() {
-        RxView.clicks(fab)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { Log.v("FAB", "$it") }
     }
 }

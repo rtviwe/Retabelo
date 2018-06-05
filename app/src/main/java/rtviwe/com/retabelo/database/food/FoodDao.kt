@@ -1,7 +1,7 @@
 package rtviwe.com.retabelo.database.food
 
+import android.arch.paging.DataSource
 import android.arch.persistence.room.*
-import io.reactivex.Flowable
 
 @Dao
 interface FoodDao {
@@ -10,13 +10,10 @@ interface FoodDao {
     fun insertFood(foodEntry: FoodEntry)
 
     @Query("SELECT * FROM food")
-    fun getAllFood(): Flowable<List<FoodEntry>>
+    fun getAllFood(): DataSource.Factory<Int, FoodEntry>
 
     @Query("SELECT * FROM food WHERE id = :id")
-    fun getFoodById(id: Int): Flowable<List<FoodEntry>>
-
-    @Query("DELETE FROM food")
-    fun nukeFoodTable()
+    fun getFoodById(id: Int): DataSource.Factory<Int, FoodEntry>
 
     @Update
     fun updateFood(foodEntry: FoodEntry)
