@@ -17,7 +17,7 @@ class FoodsViewModel(app: Application) : AndroidViewModel(app) {
     private val foodsDao: FoodDao = foodDatabase.foodDao()
 
     val foodsList: Flowable<PagedList<FoodEntry>> = RxPagedListBuilder(
-            foodsDao.getAllFood(),
+            foodsDao.getAllFoods(),
             50
     ).buildFlowable(BackpressureStrategy.LATEST)
 
