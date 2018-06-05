@@ -13,10 +13,10 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.favorite_list_item.view.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.recipe.RecipeEntry
-import rtviwe.com.retabelo.main.DiffCallbackForFavorite
+import rtviwe.com.retabelo.main.DiffCallback
 
 class FavoritesAdapter(private val context: Context)
-    : PagedListAdapter<RecipeEntry, FavoritesAdapter.FavoriteViewHolder>(DiffCallbackForFavorite) {
+    : PagedListAdapter<RecipeEntry, FavoritesAdapter.FavoriteViewHolder>(DiffCallback<RecipeEntry>()) {
 
     private val clickSubject = PublishSubject.create<RecipeEntry>()
     val clickEvent: Observable<RecipeEntry> = clickSubject
