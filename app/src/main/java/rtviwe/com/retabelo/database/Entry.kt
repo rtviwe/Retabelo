@@ -2,5 +2,5 @@ package rtviwe.com.retabelo.database
 
 interface Entry {
 
-    val id: Int
+    var id: Int
 }
