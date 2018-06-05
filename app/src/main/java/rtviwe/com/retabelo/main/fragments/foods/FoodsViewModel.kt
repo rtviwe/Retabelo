@@ -21,6 +21,14 @@ class FoodsViewModel(app: Application) : AndroidViewModel(app) {
             50
     ).buildFlowable(BackpressureStrategy.LATEST)
 
+    fun insertFood(foodEntry: FoodEntry) {
+        Flowable.just(foodEntry)
+                .observeOn(Schedulers.io())
+                .subscribe {
+                    foodsDao.insertFood(foodEntry)
+                }
+    }
+
     fun deleteFood(foodEntry: FoodEntry) {
         Flowable.just(foodEntry)
                 .observeOn(Schedulers.io())
