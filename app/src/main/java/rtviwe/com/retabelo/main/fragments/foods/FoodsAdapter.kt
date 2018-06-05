@@ -13,10 +13,10 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.food_list_item.view.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.food.FoodEntry
-import rtviwe.com.retabelo.main.DiffCallbackForFood
+import rtviwe.com.retabelo.main.DiffCallback
 
 class FoodsAdapter(private val context: Context)
-    : PagedListAdapter<FoodEntry, FoodsAdapter.FoodViewHolder>(DiffCallbackForFood) {
+    : PagedListAdapter<FoodEntry, FoodsAdapter.FoodViewHolder>(DiffCallback<FoodEntry>()) {
 
     private val clickSubject = PublishSubject.create<FoodEntry>()
     val clickEvent: Observable<FoodEntry> = clickSubject
