@@ -2,8 +2,6 @@ package rtviwe.com.retabelo.main
 
 import android.support.v7.util.DiffUtil
 import rtviwe.com.retabelo.database.Entry
-import rtviwe.com.retabelo.database.recipe.RecipeEntry
-
 /**
 * Created by festelo on 06.06.2018.
 */
