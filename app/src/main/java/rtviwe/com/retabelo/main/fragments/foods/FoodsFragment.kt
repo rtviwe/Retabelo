@@ -13,15 +13,11 @@ import android.view.animation.AnimationUtils
 import com.jakewharton.rxbinding2.support.design.widget.RxFloatingActionButton
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
-import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.foods_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.food.FoodDatabase
-import rtviwe.com.retabelo.database.food.FoodEntry
-import rtviwe.com.retabelo.database.food.FoodType
 import rtviwe.com.retabelo.main.fragments.BaseFragment
 
 
@@ -33,7 +29,6 @@ class FoodsFragment : BaseFragment() {
     private lateinit var foodsAdapter: FoodsAdapter
 
     private val disposablePaging = CompositeDisposable()
-    private val disposableClicking = CompositeDisposable()
     private lateinit var viewModel: FoodsViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,34 +43,23 @@ class FoodsFragment : BaseFragment() {
         initSwipeToDelete()
         initFabClicked()
 
-        // Временно для генерации продуктов
-        Flowable.just(FoodEntry(0, "Milk", FoodType.WATER),
+        /*Flowable.just(FoodEntry(0, "Milk", FoodType.WATER),
                       FoodEntry(0, "Bread", FoodType.BREAD),
                       FoodEntry(0, "Butter", FoodType.GROCERY))
                 .observeOn(Schedulers.io())
                 .subscribe {
                     viewModel.insertFood(it)
-                }
+                }*/
     }
 
     override fun onStart() {
         super.onStart()
-
-        disposablePaging.add(viewModel.foodsList.subscribe {
-            foodsAdapter.submitList(it)
-        })
-
-        disposableClicking.add(foodsAdapter.clickEvent
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    Log.v("ITEM", "clicked")
-                })
+        disposablePaging.add(viewModel.foodsList.subscribe(foodsAdapter::submitList))
     }
 
     override fun onStop() {
         super.onStop()
         disposablePaging.dispose()
-        disposableClicking.dispose()
     }
 
     private fun initRecyclerView() {

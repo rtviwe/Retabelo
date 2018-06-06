@@ -3,13 +3,14 @@ package rtviwe.com.retabelo.main.fragments.favorites
 import android.arch.paging.PagedListAdapter
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import com.jakewharton.rxbinding2.view.RxView
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.favorite_list_item.view.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.recipe.RecipeEntry
@@ -17,12 +18,6 @@ import rtviwe.com.retabelo.main.DiffCallback
 
 class FavoritesAdapter(private val context: Context)
     : PagedListAdapter<RecipeEntry, FavoritesAdapter.FavoriteViewHolder>(DiffCallback<RecipeEntry>()) {
-
-    private val clickSubject = PublishSubject.create<RecipeEntry>()
-    val clickEvent: Observable<RecipeEntry> = clickSubject
-
-    private val clickSubjectOnTrash = PublishSubject.create<RecipeEntry>()
-    val clickEventOnTrash: Observable<RecipeEntry> = clickSubjectOnTrash
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
         val view = LayoutInflater.from(context)
@@ -43,12 +38,23 @@ class FavoritesAdapter(private val context: Context)
 
         lateinit var favoriteRecipe: RecipeEntry
 
-        fun bindTo(favoriteEntry: RecipeEntry?) {
-            this.favoriteRecipe = favoriteEntry!!
-
+        fun bindTo(favoriteRecipe: RecipeEntry?) {
+            this.favoriteRecipe = favoriteRecipe!!
             imageView.setImageResource(R.drawable.ic_favorite_black_24dp)
-            name.text = favoriteEntry.name
+            name.text = favoriteRecipe.name
             trashView.setImageResource(R.drawable.ic_delete_black_24dp)
+
+            RxView.clicks(imageView)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        Log.v("ImageView", favoriteRecipe.toString())
+                    }
+
+            RxView.clicks(trashView)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        Log.v("TrashView", favoriteRecipe.toString())
+                    }
         }
     }
 }
