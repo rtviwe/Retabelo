@@ -2,12 +2,12 @@ package rtviwe.com.retabelo.main.fragments.foods
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import com.jakewharton.rxbinding2.support.design.widget.RxFloatingActionButton
@@ -30,6 +30,7 @@ class FoodsFragment : BaseFragment() {
     private lateinit var viewModel: FoodsViewModel
 
     private val disposablePaging = CompositeDisposable()
+    private var deletedFoodName = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -83,25 +84,30 @@ class FoodsFragment : BaseFragment() {
         RxView.clicks(fab)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    Log.v("FAB", "Clicked")
+
                 }
     }
 
     private fun initSwipes() {
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun getMovementFlags(recyclerView: RecyclerView,
-                                          viewHolder: RecyclerView.ViewHolder): Int =
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int =
                     makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
 
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
                                 target: RecyclerView.ViewHolder) = false
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                (viewHolder as FoodsAdapter.FoodViewHolder).food.let {
-                    viewModel.deleteFood(it)
-                }
+                val selectedFood = (viewHolder as FoodsAdapter.FoodViewHolder).food
+                deletedFoodName = selectedFood.name
+                viewModel.deleteFood(selectedFood)
+                showSnackbar("Cancel deleting?", Snackbar.LENGTH_LONG)
             }
         }).attachToRecyclerView(recycler_view_foods)
+    }
+
+    fun showSnackbar(message: String, length: Int) {
+        val snackbar = Snackbar.make(view!!, message, length)
+        snackbar.setAction(R.string.undo_string, { viewModel.restoreFood() })
+        snackbar.show()
     }
 }

@@ -4,4 +4,6 @@
     <string name="text_foods">Foods</string>
     <string name="text_favorites">Favorites</string>
     <string name="text_if_foods_are_empty">Здесь пока что пусто. Вы можете добавить ваши продукты, нажав на кнопку снизу справа</string>
+    <string name="undo_string">Cancel</string>
+    <string name="undo_snackbar">Cancel deleting?</string>
 </resources>
