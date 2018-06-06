@@ -5,7 +5,9 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.paging.PagedList
 import android.arch.paging.RxPagedListBuilder
 import io.reactivex.BackpressureStrategy
+import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import rtviwe.com.retabelo.database.food.FoodDao
 import rtviwe.com.retabelo.database.food.FoodDatabase
@@ -24,30 +26,35 @@ class FoodsViewModel(app: Application) : AndroidViewModel(app) {
     ).buildFlowable(BackpressureStrategy.LATEST)
 
     fun insertFood(foodEntry: FoodEntry) {
-        Flowable.just(foodEntry)
-                .observeOn(Schedulers.io())
-                .subscribe {
-                    foodsDao.insertFood(it)
+        Completable.create {
+            foodsDao.insertFood(foodEntry)
+            it.onComplete()
                 }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
     }
 
     fun deleteFood(foodEntry: FoodEntry) {
-        Flowable.just(foodEntry)
-                .observeOn(Schedulers.io())
-                .subscribe {
-                    foodsDao.deleteFood(it)
-                    removedLastFood = it
+        Completable.create {
+            foodsDao.deleteFood(foodEntry)
+            removedLastFood = foodEntry
+            it.onComplete()
                 }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
     }
 
     fun restoreFood() {
-        removedLastFood.let {
-            Flowable.just(removedLastFood)
-                    .observeOn(Schedulers.io())
-                    .subscribe {
-                        foodsDao.insertFood(it!!)
-                        removedLastFood = null
+        if (removedLastFood != null) {
+            Completable.create {
+                foodsDao.insertFood(removedLastFood!!)
+                it.onComplete()
                     }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe()
         }
     }
 }

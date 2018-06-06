@@ -19,9 +19,9 @@ class FavoritesFragment : BaseFragment() {
 
     private lateinit var recipesDatabase: RecipeDatabase
     private lateinit var favoritesAdapter: FavoritesAdapter
+    private lateinit var viewModel: FavoritesViewModel
 
     private val disposablePaging = CompositeDisposable()
-    private lateinit var viewModel: FavoritesViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,9 +35,9 @@ class FavoritesFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        disposablePaging.add(viewModel.recipesList.subscribe {
-            favoritesAdapter.submitList(it)
-        })
+        disposablePaging.add(
+                viewModel.recipesList.subscribe(favoritesAdapter::submitList)
+        )
     }
 
     override fun onStop() {

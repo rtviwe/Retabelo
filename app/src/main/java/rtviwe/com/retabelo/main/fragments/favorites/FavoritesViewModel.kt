@@ -5,7 +5,9 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.paging.PagedList
 import android.arch.paging.RxPagedListBuilder
 import io.reactivex.BackpressureStrategy
+import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import rtviwe.com.retabelo.database.recipe.RecipeDao
 import rtviwe.com.retabelo.database.recipe.RecipeDatabase
@@ -24,21 +26,25 @@ class FavoritesViewModel(app: Application) : AndroidViewModel(app) {
     ).buildFlowable(BackpressureStrategy.LATEST)
 
     fun removeFromFavorite(recipeEntry: RecipeEntry) {
-        Flowable.just(recipeEntry)
-                .observeOn(Schedulers.io())
-                .subscribe {
-                    recipesDao.deleteRecipe(it)
-                    removedLastFavorite = it
+        Completable.create {
+            recipesDao.deleteRecipe(recipeEntry)
+            removedLastFavorite = recipeEntry
+            it.onComplete()
                 }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
     }
 
     fun restoreLastFavorite() {
-        removedLastFavorite.let {
-            Flowable.just(removedLastFavorite)
-                    .observeOn(Schedulers.io())
-                    .subscribe {
-                        recipesDao.insertRecipe(it!!)
+        if (removedLastFavorite != null) {
+            Completable.create {
+                recipesDao.insertRecipe(removedLastFavorite!!)
+                it.onComplete()
                     }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe()
         }
     }
 }

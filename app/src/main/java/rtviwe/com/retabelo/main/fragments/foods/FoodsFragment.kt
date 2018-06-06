@@ -27,9 +27,9 @@ class FoodsFragment : BaseFragment() {
 
     private lateinit var foodsDatabase: FoodDatabase
     private lateinit var foodsAdapter: FoodsAdapter
+    private lateinit var viewModel: FoodsViewModel
 
     private val disposablePaging = CompositeDisposable()
-    private lateinit var viewModel: FoodsViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,8 +40,8 @@ class FoodsFragment : BaseFragment() {
         viewModel = ViewModelProviders.of(this).get(FoodsViewModel::class.java)
 
         initRecyclerView()
-        initSwipeToDelete()
-        initFabClicked()
+        initSwipes()
+        initFab()
 
         /*Flowable.just(FoodEntry(0, "Milk", FoodType.WATER),
                       FoodEntry(0, "Bread", FoodType.BREAD),
@@ -54,7 +54,9 @@ class FoodsFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        disposablePaging.add(viewModel.foodsList.subscribe(foodsAdapter::submitList))
+        disposablePaging.add(
+                viewModel.foodsList.subscribe(foodsAdapter::submitList)
+        )
     }
 
     override fun onStop() {
@@ -77,7 +79,7 @@ class FoodsFragment : BaseFragment() {
         }
     }
 
-    private fun initFabClicked() {
+    private fun initFab() {
         RxView.clicks(fab)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
@@ -85,7 +87,7 @@ class FoodsFragment : BaseFragment() {
                 }
     }
 
-    private fun initSwipeToDelete() {
+    private fun initSwipes() {
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun getMovementFlags(recyclerView: RecyclerView,
