@@ -11,11 +11,11 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
 import android.view.animation.AnimationUtils
 import com.jakewharton.rxbinding2.support.design.widget.RxFloatingActionButton
+import com.jakewharton.rxbinding2.support.design.widget.RxSnackbar
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.foods_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.food.FoodDatabase
 import rtviwe.com.retabelo.main.fragments.BaseFragment
@@ -109,5 +109,9 @@ class FoodsFragment : BaseFragment() {
         val snackbar = Snackbar.make(view!!, message, length)
         snackbar.setAction(R.string.undo_string, { viewModel.restoreFood() })
         snackbar.show()
+
+        RxSnackbar.dismisses(snackbar)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { deletedFoodName = "" }
     }
 }
