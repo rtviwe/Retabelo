@@ -6,4 +6,6 @@
     <string name="text_if_foods_are_empty">Здесь пока что пусто. Вы можете добавить ваши продукты, нажав на кнопку снизу справа</string>
     <string name="undo_string">Cancel</string>
     <string name="undo_snackbar">Cancel deleting?</string>
+    <string name="add_new_food">Добавить продукт</string>
+    <string name="hint_enter_food">Продукт</string>
 </resources>

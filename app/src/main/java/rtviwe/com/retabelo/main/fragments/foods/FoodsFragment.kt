@@ -3,11 +3,13 @@ package rtviwe.com.retabelo.main.fragments.foods
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.AnimationUtils
 import com.jakewharton.rxbinding2.support.design.widget.RxFloatingActionButton
@@ -16,8 +18,12 @@ import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.add_food_dialog.view.*
+import kotlinx.android.synthetic.main.foods_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.food.FoodDatabase
+import rtviwe.com.retabelo.database.food.FoodEntry
+import rtviwe.com.retabelo.database.food.FoodType
 import rtviwe.com.retabelo.main.fragments.BaseFragment
 
 
@@ -43,14 +49,6 @@ class FoodsFragment : BaseFragment() {
         initRecyclerView()
         initSwipes()
         initFab()
-
-        /*Flowable.just(FoodEntry(0, "Milk", FoodType.WATER),
-                      FoodEntry(0, "Bread", FoodType.BREAD),
-                      FoodEntry(0, "Butter", FoodType.GROCERY))
-                .observeOn(Schedulers.io())
-                .subscribe {
-                    viewModel.insertFood(it)
-                }*/
     }
 
     override fun onStart() {
@@ -84,7 +82,7 @@ class FoodsFragment : BaseFragment() {
         RxView.clicks(fab)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-
+                    showAddFoodDialog()
                 }
     }
 
@@ -105,7 +103,7 @@ class FoodsFragment : BaseFragment() {
         }).attachToRecyclerView(recycler_view_foods)
     }
 
-    fun showSnackbar(message: String, length: Int) {
+    private fun showSnackbar(message: String, length: Int) {
         val snackbar = Snackbar.make(view!!, message, length)
         snackbar.setAction(R.string.undo_string, { viewModel.restoreFood() })
         snackbar.show()
@@ -113,5 +111,34 @@ class FoodsFragment : BaseFragment() {
         RxSnackbar.dismisses(snackbar)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { deletedFoodName = "" }
+    }
+
+    private fun showAddFoodDialog() {
+        val layoutInflaterAndroid = LayoutInflater.from(activity!!.applicationContext)
+        val view = layoutInflaterAndroid.inflate(R.layout.add_food_dialog, null)
+
+        val alertDialogBuilderUserInput = AlertDialog.Builder(this.context!!)
+        alertDialogBuilderUserInput.setView(view)
+
+        val imageView = view.scrollable_select_icon
+        imageView.setImageResource(R.drawable.ic_receipt_black_24dp)
+
+        val textInput = view.new_food_edit_text
+
+        alertDialogBuilderUserInput
+                .setCancelable(true)
+                .setPositiveButton("Добавить", null)
+                .setNegativeButton("Отменить", null)
+
+        val alertDialog = alertDialogBuilderUserInput.create()
+        alertDialog.show()
+
+        RxView.clicks(alertDialog.getButton(AlertDialog.BUTTON_POSITIVE))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    val name = textInput.text
+                    viewModel.insertFood(FoodEntry(0, name.toString(), FoodType.ANY))
+                    alertDialog.dismiss()
+                }
     }
 }

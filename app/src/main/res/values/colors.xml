@@ -3,4 +3,5 @@
     <color name="colorPrimary">#009688</color>
     <color name="colorPrimaryDark">#00796b</color>
     <color name="colorAccent">#00BCD4</color>
+    <color name="hint_enter_food">#89c3c3c3</color>
 </resources>
