@@ -33,22 +33,21 @@ class MainActivity : AppCompatActivity() {
                 setFragmentToContainer(fragment)
             }
         }
-    }
 
-    override fun onResumeFragments() {
         val currentFragment = getFragmentFromId(currentFragmentId)
         setFragmentToContainer(currentFragment)
-        super.onResumeFragments()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(CURRENT_FRAGMENT_ID, bottom_navigation.selectedItemId)
         super.onSaveInstanceState(outState)
+        outState.putInt(CURRENT_FRAGMENT_ID, bottom_navigation.selectedItemId)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        currentFragmentId = savedInstanceState.getInt(CURRENT_FRAGMENT_ID)
         super.onRestoreInstanceState(savedInstanceState)
+        currentFragmentId = savedInstanceState.getInt(CURRENT_FRAGMENT_ID)
+        val currentFragment = getFragmentFromId(currentFragmentId)
+        setFragmentToContainer(currentFragment)
     }
 
     private fun getFragmentFromId(id: Int?): Fragment? {
@@ -61,9 +60,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setFragmentToContainer(fragment: Fragment?) {
-        supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.main_container, fragment)
-                .commit()
+        if (fragment != null) {
+            supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.main_container, fragment)
+                    .commit()
+        }
     }
 }
