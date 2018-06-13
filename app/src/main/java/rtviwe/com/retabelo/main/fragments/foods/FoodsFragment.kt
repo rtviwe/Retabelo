@@ -1,5 +1,6 @@
 package rtviwe.com.retabelo.main.fragments.foods
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -18,6 +19,7 @@ import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.add_food_dialog.view.*
 import kotlinx.android.synthetic.main.foods_fragment.*
 import rtviwe.com.retabelo.R
@@ -104,15 +106,20 @@ class FoodsFragment : BaseFragment() {
     }
 
     private fun showSnackbar(message: String, length: Int) {
-        val snackbar = Snackbar.make(view!!, message, length)
-        snackbar.setAction(R.string.undo_string, { viewModel.restoreFood() })
+        val snackbar = Snackbar.make(activity!!.main_container, message, length)
+        snackbar.setAction(R.string.undo_string) { viewModel.restoreFood() }
         snackbar.show()
+
+        // fab.startAnimation(AnimationUtils.loadAnimation(activity?.applicationContext, R.anim.move_to_top))
 
         RxSnackbar.dismisses(snackbar)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { deletedFoodName = "" }
+                .subscribe {
+                    deletedFoodName = ""
+                }
     }
 
+    @SuppressLint("InflateParams")
     private fun showAddFoodDialog() {
         val layoutInflaterAndroid = LayoutInflater.from(activity!!.applicationContext)
         val view = layoutInflaterAndroid.inflate(R.layout.add_food_dialog, null)
@@ -127,8 +134,8 @@ class FoodsFragment : BaseFragment() {
 
         alertDialogBuilderUserInput
                 .setCancelable(true)
-                .setPositiveButton("Добавить", null)
-                .setNegativeButton("Отменить", null)
+                .setPositiveButton(getString(R.string.button_add), null)
+                .setNegativeButton(getString(R.string.button_delete), null)
 
         val alertDialog = alertDialogBuilderUserInput.create()
         alertDialog.show()

@@ -27,8 +27,8 @@ class FoodsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun insertFood(foodEntry: FoodEntry) {
         Completable.create {
-            foodsDao.insertFood(foodEntry)
-            it.onComplete()
+                    foodsDao.insertFood(foodEntry)
+                    it.onComplete()
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -37,9 +37,9 @@ class FoodsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun deleteFood(foodEntry: FoodEntry) {
         Completable.create {
-            foodsDao.deleteFood(foodEntry)
-            removedLastFood = foodEntry
-            it.onComplete()
+                    foodsDao.deleteFood(foodEntry)
+                    removedLastFood = foodEntry
+                    it.onComplete()
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -49,8 +49,8 @@ class FoodsViewModel(app: Application) : AndroidViewModel(app) {
     fun restoreFood() {
         if (removedLastFood != null) {
             Completable.create {
-                foodsDao.insertFood(removedLastFood!!)
-                it.onComplete()
+                        foodsDao.insertFood(removedLastFood!!)
+                        it.onComplete()
                     }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

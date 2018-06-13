@@ -8,4 +8,6 @@
     <string name="undo_snackbar">Cancel deleting?</string>
     <string name="add_new_food">Добавить продукт</string>
     <string name="hint_enter_food">Продукт</string>
+    <string name="button_add">Добавить</string>
+    <string name="button_delete">Отменить</string>
 </resources>

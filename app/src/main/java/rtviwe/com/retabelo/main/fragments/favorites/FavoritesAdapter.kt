@@ -36,7 +36,7 @@ class FavoritesAdapter(private val context: Context)
         private val name: TextView = itemView.text_view_favorite_name
         private val trashView: ImageView = itemView.image_view_trash_photo
 
-        lateinit var favoriteRecipe: RecipeEntry
+        private lateinit var favoriteRecipe: RecipeEntry
 
         fun bindTo(favoriteRecipe: RecipeEntry?) {
             this.favoriteRecipe = favoriteRecipe!!
