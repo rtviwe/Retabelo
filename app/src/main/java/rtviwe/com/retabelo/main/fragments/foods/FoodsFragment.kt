@@ -10,6 +10,7 @@ import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -33,11 +34,15 @@ class FoodsFragment : BaseFragment() {
 
     override val layoutId = R.layout.foods_fragment
 
+    private val LOG_TAG = FoodsFragment::class.java.simpleName.toString()
+
     private lateinit var foodsDatabase: FoodDatabase
     private lateinit var foodsAdapter: FoodsAdapter
     private lateinit var viewModel: FoodsViewModel
+    private var snackbar: Snackbar? = null
 
     private val disposablePaging = CompositeDisposable()
+    private var isFabUp = false
     private var deletedFoodName = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,6 +68,7 @@ class FoodsFragment : BaseFragment() {
     override fun onStop() {
         super.onStop()
         disposablePaging.dispose()
+        snackbar?.dismiss()
     }
 
     private fun initRecyclerView() {
@@ -106,16 +112,27 @@ class FoodsFragment : BaseFragment() {
     }
 
     private fun showSnackbar(message: String, length: Int) {
-        val snackbar = Snackbar.make(activity!!.main_container, message, length)
-        snackbar.setAction(R.string.undo_string) { viewModel.restoreFood() }
-        snackbar.show()
+        snackbar = Snackbar.make(activity!!.main_container, message, length)
+        snackbar?.setAction(R.string.undo_string) { viewModel.restoreFood() }
+        snackbar?.show()
 
-        // fab.startAnimation(AnimationUtils.loadAnimation(activity?.applicationContext, R.anim.move_to_top))
+        if (!isFabUp) {
+            fab.startAnimation(AnimationUtils.loadAnimation(activity?.applicationContext, R.anim.move_fab_up))
+            isFabUp = true
+        }
 
-        RxSnackbar.dismisses(snackbar)
+        RxSnackbar.dismisses(snackbar!!)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     deletedFoodName = ""
+                    try {
+                        if (!snackbar!!.isShown) {
+                            fab.startAnimation(AnimationUtils.loadAnimation(activity?.applicationContext, R.anim.move_fab_down))
+                            isFabUp = false
+                        }
+                    } catch (ignored: Exception) {
+                        Log.w(LOG_TAG, "FoodsFragment is deleted so we have no snackbar")
+                    }
                 }
     }
 
