@@ -2,6 +2,7 @@ package rtviwe.com.retabelo.main.fragments.foods
 
 import android.annotation.SuppressLint
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
@@ -14,6 +15,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import com.jakewharton.rxbinding2.support.design.widget.RxFloatingActionButton
 import com.jakewharton.rxbinding2.support.design.widget.RxSnackbar
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
@@ -69,6 +72,7 @@ class FoodsFragment : BaseFragment() {
         super.onStop()
         disposablePaging.dispose()
         snackbar?.dismiss()
+        hideKeyboard()
     }
 
     private fun initRecyclerView() {
@@ -148,6 +152,7 @@ class FoodsFragment : BaseFragment() {
         imageView.setImageResource(R.drawable.ic_receipt_black_24dp)
 
         val textInput = view.new_food_edit_text
+        showKeyboard(textInput)
 
         alertDialogBuilderUserInput
                 .setCancelable(true)
@@ -162,7 +167,22 @@ class FoodsFragment : BaseFragment() {
                 .subscribe {
                     val name = textInput.text
                     viewModel.insertFood(FoodEntry(0, name.toString(), FoodType.ANY))
+                    hideKeyboard()
                     alertDialog.dismiss()
                 }
+    }
+
+    private fun hideKeyboard() {
+        val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if (imm.isAcceptingText) {
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
+        }
+    }
+
+    private fun showKeyboard(editText: EditText) {
+        editText.requestFocus()
+
+        val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
     }
 }
