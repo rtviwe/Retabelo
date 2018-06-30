@@ -1,6 +1,7 @@
 package rtviwe.com.retabelo.main.fragments.foods
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
@@ -12,11 +13,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import kotlinx.android.synthetic.main.add_food_dialog.view.*
 import rtviwe.com.retabelo.R
+import rtviwe.com.retabelo.database.food.FoodEntry
+import rtviwe.com.retabelo.database.food.FoodType
 
 
 class AddFoodAlertDialog : DialogFragment() {
 
-    private var isKeyboardShown = false
+    private lateinit var textInput: EditText
+    lateinit var viewModel: FoodsViewModel
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -29,22 +33,17 @@ class AddFoodAlertDialog : DialogFragment() {
         val imageView = view.scrollable_select_icon
         imageView.setImageResource(R.drawable.ic_receipt_black_24dp)
 
-        val textInput = view.new_food_edit_text
-        showKeyboard(textInput)
+        textInput = view.new_food_edit_text
+        showKeyboard()
 
-        val alertDialog = alertDialogBuilderUserInput
+        return alertDialogBuilderUserInput
                 .setCancelable(true)
                 .setPositiveButton(getString(R.string.button_add)) { _, _ ->
-                    // val name = view.new_food_edit_text.text
-                    // viewModel.insertFood(FoodEntry(0, name.toString(), FoodType.ANY))
-                    hideKeyboard()
+                    val name = view.new_food_edit_text.text
+                    viewModel.insertFood(FoodEntry(0, name.toString(), FoodType.ANY))
                 }
-                .setNegativeButton(getString(R.string.button_delete)) { _, _ ->
-                    hideKeyboard()
-                }
+                .setNegativeButton(getString(R.string.button_delete), null)
                 .create()
-
-        return alertDialog
     }
 
     override fun onDismiss(dialog: DialogInterface?) {
@@ -53,25 +52,15 @@ class AddFoodAlertDialog : DialogFragment() {
     }
 
     private fun hideKeyboard() {
-        /*val imm = activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        var view = activity!!.currentFocus
+        textInput.clearFocus()
 
-        if (view == null) {
-            view = View(activity)
-        }
-        imm.hideSoftInputFromWindow(view.windowToken, 0)*/
-        val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-        imm!!.hideSoftInputFromWindow(activity!!.window.decorView.rootView.windowToken, 0)
+        val imm = activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
     }
 
-    private fun showKeyboard(editText: EditText) {
-        /*val imm = activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        var view = activity!!.currentFocus
+    private fun showKeyboard() {
+        textInput.requestFocus()
 
-        if (view == null) {
-            view = View(activity)
-        }
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0)*/
         val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
         imm!!.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
     }

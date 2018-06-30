@@ -135,6 +135,9 @@ class FoodsFragment : BaseFragment() {
 
     private fun showAddFoodDialog() {
         alertDialog = AddFoodAlertDialog()
+        alertDialog.apply {
+            this@apply.viewModel = this@FoodsFragment.viewModel
+        }
         alertDialog.show(childFragmentManager, "AddFoodDialog")
     }
 }

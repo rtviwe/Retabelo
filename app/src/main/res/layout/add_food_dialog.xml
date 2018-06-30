@@ -29,6 +29,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="56dp"
+        android:maxLines="1"
         android:background="@android:color/transparent"
         android:gravity="top"
         android:hint="@string/hint_enter_food"
