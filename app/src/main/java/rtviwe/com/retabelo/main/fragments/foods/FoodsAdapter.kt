@@ -44,9 +44,11 @@ class FoodsAdapter(private val context: Context)
 
             RxView.clicks(itemView)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
+                    .subscribe({
                         Log.v("FoodViewHolder", foodEntry.toString())
-                    }
+                    }, {
+                        Log.e("FoodViewHolder", "Error when clicking on itemView: $it")
+                    })
         }
     }
 }

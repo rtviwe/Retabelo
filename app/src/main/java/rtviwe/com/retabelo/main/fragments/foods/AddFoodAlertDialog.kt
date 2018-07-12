@@ -20,7 +20,7 @@ import rtviwe.com.retabelo.database.food.FoodType
 class AddFoodAlertDialog : DialogFragment() {
 
     private lateinit var textInput: EditText
-    lateinit var viewModel: FoodsViewModel
+    lateinit var foodsViewModel: FoodsViewModel
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -40,7 +40,7 @@ class AddFoodAlertDialog : DialogFragment() {
                 .setCancelable(true)
                 .setPositiveButton(getString(R.string.button_add)) { _, _ ->
                     val name = view.new_food_edit_text.text
-                    viewModel.insertFood(FoodEntry(0, name.toString(), FoodType.ANY))
+                    foodsViewModel.insertFood(FoodEntry(0, name.toString(), FoodType.ANY))
                 }
                 .setNegativeButton(getString(R.string.button_delete), null)
                 .create()

@@ -84,9 +84,11 @@ class FoodsFragment : BaseFragment() {
     private fun initFab() {
         RxView.clicks(fab)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     showAddFoodDialog()
-                }
+                }, {
+                    Log.e("FoodViewHolder", "Error when clicking on fab: $it")
+                })
     }
 
     private fun initSwipes() {
@@ -120,7 +122,7 @@ class FoodsFragment : BaseFragment() {
 
         RxSnackbar.dismisses(snackbar!!)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     deletedFoodName = ""
                     try {
                         if (!snackbar!!.isShown) {
@@ -130,13 +132,15 @@ class FoodsFragment : BaseFragment() {
                     } catch (ignored: Exception) {
                         Log.w(LOG_TAG, "FoodsFragment has been destroyed so we have no snackbar")
                     }
-                }
+                }, {
+                    Log.e("FoodViewHolder", "Error when dismissing snackbar: $it")
+                })
     }
 
     private fun showAddFoodDialog() {
         alertDialog = AddFoodAlertDialog()
         alertDialog.apply {
-            this@apply.viewModel = this@FoodsFragment.viewModel
+            foodsViewModel = viewModel
         }
         alertDialog.show(childFragmentManager, "AddFoodDialog")
     }

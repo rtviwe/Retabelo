@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -22,7 +21,7 @@
         android:layout_height="48dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="12dp"
-        android:text="Name of dish"
+        android:text="@string/name_of_dish"
         app:layout_constraintBottom_toBottomOf="@+id/image_view_recommended_dish"
         app:layout_constraintStart_toEndOf="@+id/image_view_recommended_dish"
         app:layout_constraintTop_toTopOf="@+id/image_view_recommended_dish"
@@ -34,7 +33,7 @@
         android:layout_height="48dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="16dp"
-        android:text="4.5"
+        android:text="@string/_4_5"
         app:layout_constraintBottom_toBottomOf="@+id/image_view_recommend_dish"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/image_view_recommend_dish"
