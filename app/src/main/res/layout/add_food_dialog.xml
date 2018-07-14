@@ -40,13 +40,13 @@
         app:layout_constraintBottom_toBottomOf="@+id/scrollable_select_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/scrollable_select_icon"
-        android:paddingEnd="8dp"
         app:layout_constraintTop_toTopOf="@+id/scrollable_select_icon">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/new_food_edit_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:maxLength="64" />
 
     </android.support.design.widget.TextInputLayout>
 

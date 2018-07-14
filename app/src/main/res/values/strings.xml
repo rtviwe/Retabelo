@@ -3,14 +3,14 @@
     <string name="text_recommendations">Recipes</string>
     <string name="text_foods">Foods</string>
     <string name="text_favorites">Favorites</string>
-    <string name="text_if_foods_are_empty">Здесь пока что пусто. Вы можете добавить ваши продукты, нажав на кнопку снизу справа</string>
+    <string name="text_if_foods_are_empty">Empty</string>
     <string name="undo_string">Cancel</string>
     <string name="undo_snackbar">Cancel deleting?</string>
-    <string name="add_new_food">Добавить</string>
-    <string name="hint_enter_food">Продукт</string>
-    <string name="button_add">Добавить</string>
-    <string name="button_delete">Отменить</string>
-    <string name="product_hint">Продукт</string>
+    <string name="add_new_food">Add</string>
+    <string name="hint_enter_food">Product</string>
+    <string name="button_add">Add</string>
+    <string name="button_delete">Cancel</string>
+    <string name="product_hint">Product</string>
     <string name="_4_5">4.5</string>
     <string name="name_of_dish">Name of dish</string>
 </resources>
