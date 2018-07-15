@@ -14,7 +14,7 @@ abstract class FoodDatabase : RoomDatabase() {
     companion object : SingletonHolder<FoodDatabase, Context>({
         Room.databaseBuilder(it.applicationContext,
                 FoodDatabase::class.java,
-                "Food.db")
+                "Foods.db")
                 .build()
     })
 

@@ -12,7 +12,7 @@ abstract class RecipeDatabase : RoomDatabase() {
     companion object : SingletonHolder<RecipeDatabase, Context>({
         Room.databaseBuilder(it.applicationContext,
                 RecipeDatabase::class.java,
-                "Recipe.db")
+                "Recipes.db")
                 .build()
     })
 

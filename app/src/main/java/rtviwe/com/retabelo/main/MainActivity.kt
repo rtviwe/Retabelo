@@ -10,7 +10,6 @@ import com.google.android.gms.location.places.Places
 import com.jakewharton.rxbinding2.support.design.widget.RxBottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import rtviwe.com.retabelo.R
-import rtviwe.com.retabelo.database.food.FoodDatabase
 import rtviwe.com.retabelo.geolocation.ConnectionListener
 import rtviwe.com.retabelo.main.fragments.favorites.FavoritesFragment
 import rtviwe.com.retabelo.main.fragments.foods.FoodsFragment
@@ -22,7 +21,6 @@ class MainActivity : AppCompatActivity() {
     private val CURRENT_FRAGMENT_ID = "Current fragment"
 
     private lateinit var googleApiClient: GoogleApiClient
-    private lateinit var foodDatabase: FoodDatabase
     private var currentFragmentId = R.id.action_recommendations
 
     private val connectionListener = ConnectionListener()
@@ -30,8 +28,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        foodDatabase = FoodDatabase.getInstance(applicationContext)
 
         RxBottomNavigationView.itemSelections(bottom_navigation as BottomNavigationView).subscribe {
             val currentFragmentId = it.itemId

@@ -2,7 +2,7 @@ package rtviwe.com.retabelo.database.food
 
 enum class FoodType {
     ANY,
-    WATER,
+    LIQUID,
     BREAD,
     ALCOHOL,
     FRUIT,

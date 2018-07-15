@@ -56,11 +56,9 @@ class AddFoodAlertDialog : DialogFragment() {
 
     private fun hideKeyboard() {
         textInput.clearFocus()
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
     }
 
     private fun showKeyboard() {
         textInput.requestFocus()
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
     }
 }
