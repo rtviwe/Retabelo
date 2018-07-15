@@ -12,12 +12,10 @@ import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import com.jakewharton.rxbinding2.support.design.widget.RxFloatingActionButton
-import com.jakewharton.rxbinding2.support.design.widget.RxSnackbar
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.foods_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.food.FoodDatabase
@@ -37,7 +35,6 @@ class FoodsFragment : BaseFragment() {
     private var snackbar: Snackbar? = null
 
     private val disposablePaging = CompositeDisposable()
-    private var isFabUp = false
     private var deletedFoodName = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,7 +60,6 @@ class FoodsFragment : BaseFragment() {
     override fun onStop() {
         super.onStop()
         disposablePaging.dispose()
-        snackbar?.dismiss()
     }
 
     private fun initRecyclerView() {
@@ -109,32 +105,12 @@ class FoodsFragment : BaseFragment() {
     }
 
     private fun showSnackbar(message: String, length: Int) {
-        snackbar = Snackbar.make(activity!!.main_container, message, length)
+        snackbar = Snackbar.make(foods_coordinator_layout, message, length)
         snackbar?.setAction(R.string.undo_string) {
             viewModel.restoreFood()
         }
+
         snackbar?.show()
-
-        if (!isFabUp) {
-            fab.startAnimation(AnimationUtils.loadAnimation(activity?.applicationContext, R.anim.move_fab_up))
-            isFabUp = true
-        }
-
-        RxSnackbar.dismisses(snackbar!!)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    deletedFoodName = ""
-                    try {
-                        if (!snackbar!!.isShown) {
-                            fab.startAnimation(AnimationUtils.loadAnimation(activity?.applicationContext, R.anim.move_fab_down))
-                            isFabUp = false
-                        }
-                    } catch (ignored: Exception) {
-                        Log.w(LOG_TAG, "FoodsFragment has been destroyed so we have no snackbar")
-                    }
-                }, {
-                    Log.e("FoodViewHolder", "Error when dismissing snackbar: $it")
-                })
     }
 
     private fun showAddFoodDialog() {
