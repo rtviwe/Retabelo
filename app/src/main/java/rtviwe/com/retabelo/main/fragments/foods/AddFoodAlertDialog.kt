@@ -20,8 +20,6 @@ class AddFoodAlertDialog : DialogFragment() {
     private lateinit var textInput: EditText
     lateinit var foodsViewModel: FoodsViewModel
 
-    private lateinit var imm: InputMethodManager
-
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val layoutInflaterAndroid = LayoutInflater.from(context)
@@ -34,7 +32,6 @@ class AddFoodAlertDialog : DialogFragment() {
         imageView.setImageResource(R.drawable.ic_receipt_black_24dp)
 
         textInput = view.new_food_edit_text
-        imm = activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         showKeyboard()
 
         return alertDialogBuilderUserInput
@@ -49,6 +46,7 @@ class AddFoodAlertDialog : DialogFragment() {
 
     private fun showKeyboard() {
         textInput.post {
+            val imm = activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(textInput, 0)
         }
     }

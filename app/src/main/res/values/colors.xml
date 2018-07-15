@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#607d8b</color>
-    <color name="colorPrimaryDark">#455a64</color>
-    <color name="colorPrimaryLight">#98ee99</color>
-    <color name="colorAccent">#42a5f5</color>
-    <color name="colorAccentDark">#7c8500</color>
-    <color name="colorAccentLight">#e4e65e</color>
+    <color name="colorPrimary">#ff9800</color>
+    <color name="colorPrimaryDark">#fb8c00</color>
+    <color name="colorAccent">#f44336</color>
     <color name="hint_enter_food">#89c3c3c3</color>
 </resources>

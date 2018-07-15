@@ -27,25 +27,25 @@ class FoodsAdapter(private val context: Context)
     }
 
     override fun onBindViewHolder(holder: FoodViewHolder, position: Int) {
-        holder.bindTo(getItem(position))
+        holder.bindTo(getItem(position)!!)
     }
 
     inner class FoodViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private var picture: ImageView = itemView.image_view_photo_food
-        private var name: TextView = itemView.text_view_name
+        private var pictureImageView: ImageView = itemView.image_view_photo_food
+        private var nameTextView: TextView = itemView.text_view_name
 
         lateinit var food: FoodEntry
 
-        fun bindTo(foodEntry: FoodEntry?) {
-            this.food = foodEntry!!
-            name.text = food.name
-            picture.setImageResource(R.drawable.ic_receipt_black_24dp)
+        fun bindTo(food: FoodEntry) {
+            this.food = food
+            nameTextView.text = food.name
+            pictureImageView.setImageResource(R.drawable.ic_receipt_black_24dp)
 
             RxView.clicks(itemView)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
-                        Log.v("FoodViewHolder", foodEntry.toString())
+                        Log.v("FoodViewHolder", food.toString())
                     }, {
                         Log.e("FoodViewHolder", "Error when clicking on itemView: $it")
                     })

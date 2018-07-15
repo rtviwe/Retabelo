@@ -26,8 +26,6 @@ class FoodsFragment : BaseFragment() {
 
     override val layoutId = R.layout.foods_fragment
 
-    private val LOG_TAG = FoodsFragment::class.java.simpleName.toString()
-
     private lateinit var foodsDatabase: FoodDatabase
     private lateinit var foodsAdapter: FoodsAdapter
     private lateinit var viewModel: FoodsViewModel
