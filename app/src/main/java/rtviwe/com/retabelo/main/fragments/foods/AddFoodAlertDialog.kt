@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
@@ -28,8 +27,6 @@ class AddFoodAlertDialog : DialogFragment() {
         val layoutInflaterAndroid = LayoutInflater.from(context)
         val view = layoutInflaterAndroid.inflate(R.layout.add_food_dialog, null)
 
-        imm = activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-
         val alertDialogBuilderUserInput = AlertDialog.Builder(context)
         alertDialogBuilderUserInput.setView(view)
 
@@ -37,6 +34,7 @@ class AddFoodAlertDialog : DialogFragment() {
         imageView.setImageResource(R.drawable.ic_receipt_black_24dp)
 
         textInput = view.new_food_edit_text
+        imm = activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         showKeyboard()
 
         return alertDialogBuilderUserInput
@@ -49,16 +47,9 @@ class AddFoodAlertDialog : DialogFragment() {
                 .create()
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
-        hideKeyboard()
-        super.onDismiss(dialog)
-    }
-
-    private fun hideKeyboard() {
-        textInput.clearFocus()
-    }
-
     private fun showKeyboard() {
-        textInput.requestFocus()
+        textInput.post {
+            imm.showSoftInput(textInput, 0)
+        }
     }
 }
