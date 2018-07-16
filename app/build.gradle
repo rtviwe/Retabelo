@@ -70,5 +70,5 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-firestore:4.1.0'
     implementation 'com.firebaseui:firebase-ui-storage:4.1.0'
 
-    implementation 'com.github.FrangSierra:RxFirebase:1.5.0'
+    implementation "com.squareup.picasso:picasso:2.5.2"
 }
