@@ -40,13 +40,13 @@ class MainActivity : AppCompatActivity() {
         val currentFragment = getFragmentFromId(currentFragmentId)
         setFragmentToContainer(currentFragment)
 
-        googleApiClient = GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(connectionListener)
-                .addOnConnectionFailedListener(connectionListener)
-                .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .enableAutoManage(this, connectionListener)
-                .build()
+        googleApiClient = GoogleApiClient.Builder(this).apply {
+            addConnectionCallbacks(connectionListener)
+            addOnConnectionFailedListener(connectionListener)
+            addApi(LocationServices.API)
+            addApi(Places.GEO_DATA_API)
+            enableAutoManage(this@MainActivity, connectionListener)
+        }.build()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

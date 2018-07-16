@@ -18,8 +18,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.foods_fragment.*
 import rtviwe.com.retabelo.R
-import rtviwe.com.retabelo.database.food.FoodDatabase
 import rtviwe.com.retabelo.main.fragments.BaseFragment
+import rtviwe.com.retabelo.model.database.food.FoodDatabase
 
 
 class FoodsFragment : BaseFragment() {

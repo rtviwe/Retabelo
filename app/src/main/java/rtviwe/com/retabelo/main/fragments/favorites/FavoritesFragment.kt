@@ -9,8 +9,8 @@ import android.view.View
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.favorites_fragment.*
 import rtviwe.com.retabelo.R
-import rtviwe.com.retabelo.database.recipe.RecipeDatabase
 import rtviwe.com.retabelo.main.fragments.BaseFragment
+import rtviwe.com.retabelo.model.database.recipe.RecipeDatabase
 
 
 class FavoritesFragment : BaseFragment() {
@@ -27,7 +27,7 @@ class FavoritesFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recipesDatabase = RecipeDatabase.getInstance(activity!!.applicationContext)
-        favoritesAdapter = FavoritesAdapter()
+        favoritesAdapter = FavoritesAdapter(activity!!.application)
         viewModel = ViewModelProviders.of(this).get(FavoritesViewModel::class.java)
 
         initRecyclerView()

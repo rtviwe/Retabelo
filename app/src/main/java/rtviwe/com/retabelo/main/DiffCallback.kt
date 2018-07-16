@@ -1,7 +1,7 @@
 package rtviwe.com.retabelo.main
 
 import android.support.v7.util.DiffUtil
-import rtviwe.com.retabelo.database.Entry
+import rtviwe.com.retabelo.model.Entry
 
 /**
 * Created by festelo on 06.06.2018.

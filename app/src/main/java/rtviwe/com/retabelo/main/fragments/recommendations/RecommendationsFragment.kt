@@ -8,8 +8,8 @@ import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.recommendations_fragment.*
 import rtviwe.com.retabelo.R
-import rtviwe.com.retabelo.database.recipe.Recipe
 import rtviwe.com.retabelo.main.fragments.BaseFragment
+import rtviwe.com.retabelo.model.database.recipe.RecipeEntry
 
 
 class RecommendationsFragment : BaseFragment() {
@@ -30,17 +30,16 @@ class RecommendationsFragment : BaseFragment() {
         val queryForRecipes = firebaseFirestore.collection("recipes")
 
         val config = PagedList.Config.Builder().apply {
-            setEnablePlaceholders(false)
             setPrefetchDistance(10)
             setPageSize(20)
         }.build()
 
-        val options = FirestorePagingOptions.Builder<Recipe>().apply {
+        val options = FirestorePagingOptions.Builder<RecipeEntry>().apply {
             setLifecycleOwner(this@RecommendationsFragment)
-            setQuery(queryForRecipes, config, Recipe::class.java)
+            setQuery(queryForRecipes, config, RecipeEntry::class.java)
         }.build()
 
-        recommendationsAdapter = RecommendationsAdapter(context!!, options)
+        recommendationsAdapter = RecommendationsAdapter(activity!!.application, options)
     }
 
     private fun initRecyclerView() {
