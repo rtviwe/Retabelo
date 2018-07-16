@@ -13,7 +13,7 @@
             @style/Widget.MaterialComponents.Button.UnelevatedButton
         </item>
         <item name="android:buttonBarNegativeButtonStyle">
-            @style/Widget.MaterialComponents.Button.TextButton.Dialog
+            @style/Widget.MaterialComponents.Button.TextButton
         </item>
     </style>
 

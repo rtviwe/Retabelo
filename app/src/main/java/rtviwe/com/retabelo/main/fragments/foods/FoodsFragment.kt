@@ -40,7 +40,7 @@ class FoodsFragment : BaseFragment() {
         fab.startAnimation(AnimationUtils.loadAnimation(activity?.applicationContext, R.anim.scale_fab_in))
 
         foodsDatabase = FoodDatabase.getInstance(activity!!.applicationContext)
-        foodsAdapter = FoodsAdapter(activity!!.applicationContext)
+        foodsAdapter = FoodsAdapter()
         viewModel = ViewModelProviders.of(this).get(FoodsViewModel::class.java)
 
         initRecyclerView()

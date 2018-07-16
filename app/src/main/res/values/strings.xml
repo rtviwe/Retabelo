@@ -13,4 +13,5 @@
     <string name="product_hint">Product</string>
     <string name="_4_5">4.5</string>
     <string name="name_of_dish">Name of dish</string>
+    <string name="selected_food_type">Selected food type</string>
 </resources>

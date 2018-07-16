@@ -1,7 +1,6 @@
 package rtviwe.com.retabelo.main.fragments.favorites
 
 import android.arch.paging.PagedListAdapter
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,11 +15,11 @@ import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.recipe.RecipeEntry
 import rtviwe.com.retabelo.main.DiffCallback
 
-class FavoritesAdapter(private val context: Context)
+class FavoritesAdapter
     : PagedListAdapter<RecipeEntry, FavoritesAdapter.FavoriteViewHolder>(DiffCallback<RecipeEntry>()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
-        val view = LayoutInflater.from(context)
+        val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.favorite_list_item, parent, false)
 
         return FavoriteViewHolder(view)

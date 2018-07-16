@@ -1,7 +1,6 @@
 package rtviwe.com.retabelo.main.fragments.foods
 
 import android.arch.paging.PagedListAdapter
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,12 +15,12 @@ import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.food.FoodEntry
 import rtviwe.com.retabelo.main.DiffCallback
 
-class FoodsAdapter(private val context: Context)
+class FoodsAdapter
     : PagedListAdapter<FoodEntry, FoodsAdapter.FoodViewHolder>(DiffCallback<FoodEntry>()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodViewHolder {
-        val view = LayoutInflater.from(context)
-                .inflate(R.layout.food_list_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.food_list_item,
+                parent, false)
 
         return FoodViewHolder(view)
     }
