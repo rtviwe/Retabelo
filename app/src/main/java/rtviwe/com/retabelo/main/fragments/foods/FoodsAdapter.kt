@@ -12,8 +12,8 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.food_list_item.view.*
 import rtviwe.com.retabelo.R
-import rtviwe.com.retabelo.database.food.FoodEntry
 import rtviwe.com.retabelo.main.DiffCallback
+import rtviwe.com.retabelo.model.database.food.FoodEntry
 
 class FoodsAdapter
     : PagedListAdapter<FoodEntry, FoodsAdapter.FoodViewHolder>(DiffCallback<FoodEntry>()) {

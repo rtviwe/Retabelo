@@ -11,8 +11,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import kotlinx.android.synthetic.main.add_food_dialog.view.*
 import rtviwe.com.retabelo.R
-import rtviwe.com.retabelo.database.food.FoodEntry
-import rtviwe.com.retabelo.database.food.FoodType
+import rtviwe.com.retabelo.model.database.food.FoodEntry
+import rtviwe.com.retabelo.model.database.food.FoodType
 
 
 class AddFoodAlertDialog : DialogFragment() {
@@ -34,14 +34,14 @@ class AddFoodAlertDialog : DialogFragment() {
         textInput = view.new_food_edit_text
         showKeyboard()
 
-        return alertDialogBuilderUserInput
-                .setCancelable(true)
-                .setPositiveButton(getString(R.string.button_add)) { _, _ ->
-                    val name = view.new_food_edit_text.text
-                    foodsViewModel.insertFood(FoodEntry(0, name.toString(), FoodType.ANY))
-                }
-                .setNegativeButton(getString(R.string.button_delete), null)
-                .create()
+        return alertDialogBuilderUserInput.apply {
+            setCancelable(true)
+            setPositiveButton(getString(R.string.button_add)) { _, _ ->
+                val name = view.new_food_edit_text.text
+                foodsViewModel.insertFood(FoodEntry(0, name.toString(), FoodType.ANY))
+            }
+            setNegativeButton(getString(R.string.button_delete), null)
+        }.create()
     }
 
     private fun showKeyboard() {
