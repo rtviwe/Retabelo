@@ -1,4 +1,4 @@
-package rtviwe.com.retabelo.model
+package rtviwe.com.retabelo.database
 
 interface Entry {
 

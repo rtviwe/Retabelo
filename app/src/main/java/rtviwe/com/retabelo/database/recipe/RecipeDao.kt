@@ -21,6 +21,12 @@ interface RecipeDao {
     @Query("SELECT * FROM recipe WHERE isFavorite = 1 AND id = :id")
     fun getFavoriteRecipeById(id: Int): DataSource.Factory<Int, RecipeEntry>
 
+    @Query("SELECT * FROM recipe WHERE name = :name")
+    fun findRecipeByName(name: String): RecipeEntry?
+
+    @Query("DELETE FROM recipe WHERE name = :name")
+    fun deleteRecipeByName(name: String)
+
     @Update
     fun updateRecipe(recipeEntry: RecipeEntry)
 

@@ -18,8 +18,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.foods_fragment.*
 import rtviwe.com.retabelo.R
+import rtviwe.com.retabelo.database.food.FoodDatabase
 import rtviwe.com.retabelo.main.fragments.BaseFragment
-import rtviwe.com.retabelo.model.database.food.FoodDatabase
 
 
 class FoodsFragment : BaseFragment() {
@@ -30,7 +30,6 @@ class FoodsFragment : BaseFragment() {
     private lateinit var foodsAdapter: FoodsAdapter
     private lateinit var viewModel: FoodsViewModel
     private lateinit var alertDialog: AddFoodAlertDialog
-    private var snackbar: Snackbar? = null
 
     private val disposablePaging = CompositeDisposable()
     private var deletedFoodName = ""
@@ -103,12 +102,12 @@ class FoodsFragment : BaseFragment() {
     }
 
     private fun showSnackbar(message: String, length: Int) {
-        snackbar = Snackbar.make(foods_coordinator_layout, message, length)
-        snackbar?.setAction(R.string.undo_string) {
+        val snackbar = Snackbar.make(foods_coordinator_layout, message, length)
+        snackbar.setAction(R.string.undo_string) {
             viewModel.restoreFood()
         }
 
-        snackbar?.show()
+        snackbar.show()
     }
 
     private fun showAddFoodDialog() {

@@ -1,4 +1,4 @@
-package rtviwe.com.retabelo.model
+package rtviwe.com.retabelo.database
 
 open class SingletonHolder<out T, in A>(creator: (A) -> T) {
 

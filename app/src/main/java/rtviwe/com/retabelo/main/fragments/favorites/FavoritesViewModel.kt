@@ -9,9 +9,9 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import rtviwe.com.retabelo.model.database.recipe.RecipeDao
-import rtviwe.com.retabelo.model.database.recipe.RecipeDatabase
-import rtviwe.com.retabelo.model.database.recipe.RecipeEntry
+import rtviwe.com.retabelo.database.recipe.RecipeDao
+import rtviwe.com.retabelo.database.recipe.RecipeDatabase
+import rtviwe.com.retabelo.database.recipe.RecipeEntry
 
 class FavoritesViewModel(app: Application) : AndroidViewModel(app) {
 

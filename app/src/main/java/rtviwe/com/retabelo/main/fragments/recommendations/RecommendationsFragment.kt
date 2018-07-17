@@ -8,8 +8,8 @@ import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.recommendations_fragment.*
 import rtviwe.com.retabelo.R
+import rtviwe.com.retabelo.database.recipe.RecipeEntry
 import rtviwe.com.retabelo.main.fragments.BaseFragment
-import rtviwe.com.retabelo.model.database.recipe.RecipeEntry
 
 
 class RecommendationsFragment : BaseFragment() {
