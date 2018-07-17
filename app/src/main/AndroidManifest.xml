@@ -27,6 +27,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".details.RecipeDetail"
+            android:parentActivityName=".main.MainActivity" />
+
     </application>
 
 </manifest>

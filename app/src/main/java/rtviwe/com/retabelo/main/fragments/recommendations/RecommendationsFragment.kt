@@ -39,7 +39,7 @@ class RecommendationsFragment : BaseFragment() {
             setQuery(queryForRecipes, config, RecipeEntry::class.java)
         }.build()
 
-        recommendationsAdapter = RecommendationsAdapter(activity!!.application, options)
+        recommendationsAdapter = RecommendationsAdapter(activity!!.application, context!!, options)
     }
 
     private fun initRecyclerView() {

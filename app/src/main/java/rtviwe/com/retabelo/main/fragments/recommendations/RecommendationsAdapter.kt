@@ -1,6 +1,8 @@
 package rtviwe.com.retabelo.main.fragments.recommendations
 
 import android.app.Application
+import android.content.Context
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +16,12 @@ import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.recipe.RecipeDao
 import rtviwe.com.retabelo.database.recipe.RecipeDatabase
 import rtviwe.com.retabelo.database.recipe.RecipeEntry
+import rtviwe.com.retabelo.details.RecipeDetail
+import rtviwe.com.retabelo.details.RecipeDetail.Companion.EXTRA_BODY
+import rtviwe.com.retabelo.details.RecipeDetail.Companion.EXTRA_NAME
 
 class RecommendationsAdapter(private val app: Application,
+                             private val context: Context,
                              options: FirestorePagingOptions<RecipeEntry>)
     : FirestorePagingAdapter<RecipeEntry, RecommendationsAdapter.RecommendationsViewHolder>(options) {
 
@@ -45,6 +51,15 @@ class RecommendationsAdapter(private val app: Application,
                     .joinToString(limit = 50, separator = " ")
 
             markDownView.loadMarkdown(previewText)
+
+            RxView.clicks(itemView)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        val intent = Intent(context, RecipeDetail::class.java)
+                        intent.putExtra(EXTRA_NAME, item.name)
+                        intent.putExtra(EXTRA_BODY, item.body)
+                        context.startActivity(intent)
+                    }
 
             RxView.clicks(itemView.favorite_button)
                     .observeOn(AndroidSchedulers.mainThread())
