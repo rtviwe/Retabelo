@@ -36,8 +36,8 @@ class RecommendationsFragment : Fragment() {
         val queryForRecipes = firebaseFirestore.collection("recipes")
 
         val config = PagedList.Config.Builder().apply {
-            setPrefetchDistance(10)
             setPageSize(20)
+            setEnablePlaceholders(true)
         }.build()
 
         val options = FirestorePagingOptions.Builder<RecipeEntry>().apply {
@@ -45,7 +45,7 @@ class RecommendationsFragment : Fragment() {
             setQuery(queryForRecipes, config, RecipeEntry::class.java)
         }.build()
 
-        recommendationsAdapter = RecommendationsAdapter(activity!!.application, options)
+        recommendationsAdapter = RecommendationsAdapter(this, options)
     }
 
     private fun initRecyclerView() {
