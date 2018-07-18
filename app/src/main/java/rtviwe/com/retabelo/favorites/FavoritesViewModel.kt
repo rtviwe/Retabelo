@@ -6,9 +6,9 @@ import android.arch.paging.PagedList
 import android.arch.paging.RxPagedListBuilder
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
-import rtviwe.com.retabelo.database.recipe.RecipeDao
-import rtviwe.com.retabelo.database.recipe.RecipeDatabase
-import rtviwe.com.retabelo.database.recipe.RecipeEntry
+import rtviwe.com.retabelo.model.recipe.RecipeDao
+import rtviwe.com.retabelo.model.recipe.RecipeDatabase
+import rtviwe.com.retabelo.model.recipe.RecipeEntry
 
 class FavoritesViewModel(app: Application) : AndroidViewModel(app) {
 

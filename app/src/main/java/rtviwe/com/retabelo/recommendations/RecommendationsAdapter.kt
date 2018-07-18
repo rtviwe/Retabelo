@@ -11,10 +11,10 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.recipe_item.view.*
 import rtviwe.com.retabelo.R
-import rtviwe.com.retabelo.database.recipe.RecipeDao
-import rtviwe.com.retabelo.database.recipe.RecipeDatabase
-import rtviwe.com.retabelo.database.recipe.RecipeEntry
-import rtviwe.com.retabelo.database.recipe.RecipePresenter
+import rtviwe.com.retabelo.model.recipe.RecipeDao
+import rtviwe.com.retabelo.model.recipe.RecipeDatabase
+import rtviwe.com.retabelo.model.recipe.RecipeEntry
+import rtviwe.com.retabelo.model.recipe.RecipePresenter
 
 class RecommendationsAdapter(private val app: Application,
                              options: FirestorePagingOptions<RecipeEntry>)

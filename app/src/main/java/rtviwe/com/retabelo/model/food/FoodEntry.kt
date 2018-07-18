@@ -1,8 +1,8 @@
-package rtviwe.com.retabelo.database.food
+package rtviwe.com.retabelo.model.food
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import rtviwe.com.retabelo.database.Entry
+import rtviwe.com.retabelo.model.Entry
 
 @Entity(tableName = "food")
 data class FoodEntry(

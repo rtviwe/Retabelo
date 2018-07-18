@@ -1,11 +1,11 @@
-package rtviwe.com.retabelo.database.food
+package rtviwe.com.retabelo.model.food
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import android.content.Context
-import rtviwe.com.retabelo.database.SingletonHolder
+import rtviwe.com.retabelo.model.SingletonHolder
 
 @Database(entities = [FoodEntry::class], version = 1, exportSchema = false)
 @TypeConverters(FoodTypeConverter::class)

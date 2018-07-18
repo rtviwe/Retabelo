@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.favorites_fragment.*
 import rtviwe.com.retabelo.R
-import rtviwe.com.retabelo.database.recipe.RecipeDatabase
+import rtviwe.com.retabelo.model.recipe.RecipeDatabase
 
 
 class FavoritesFragment : Fragment() {

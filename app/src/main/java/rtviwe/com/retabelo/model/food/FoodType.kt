@@ -1,4 +1,4 @@
-package rtviwe.com.retabelo.database.food
+package rtviwe.com.retabelo.model.food
 
 enum class FoodType {
     ANY,

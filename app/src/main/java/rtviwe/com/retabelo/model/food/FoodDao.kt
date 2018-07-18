@@ -1,4 +1,4 @@
-package rtviwe.com.retabelo.database.food
+package rtviwe.com.retabelo.model.food
 
 import android.arch.paging.DataSource
 import android.arch.persistence.room.*

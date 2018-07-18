@@ -9,9 +9,9 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import rtviwe.com.retabelo.database.food.FoodDao
-import rtviwe.com.retabelo.database.food.FoodDatabase
-import rtviwe.com.retabelo.database.food.FoodEntry
+import rtviwe.com.retabelo.model.food.FoodDao
+import rtviwe.com.retabelo.model.food.FoodDatabase
+import rtviwe.com.retabelo.model.food.FoodEntry
 
 class FoodsViewModel(app: Application) : AndroidViewModel(app) {
 

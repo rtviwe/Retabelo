@@ -1,4 +1,4 @@
-package rtviwe.com.retabelo.database.recipe
+package rtviwe.com.retabelo.model.recipe
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
@@ -7,7 +7,7 @@ import com.google.firebase.firestore.IgnoreExtraProperties
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import rtviwe.com.retabelo.database.Entry
+import rtviwe.com.retabelo.model.Entry
 
 @IgnoreExtraProperties
 @Entity(tableName = "recipe")
