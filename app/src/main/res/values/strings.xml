@@ -3,15 +3,13 @@
     <string name="text_recommendations">Recipes</string>
     <string name="text_foods">Foods</string>
     <string name="text_favorites">Favorites</string>
-    <string name="text_if_foods_are_empty">Empty</string>
-    <string name="undo_string">Cancel</string>
-    <string name="undo_snackbar">Cancel deleting?</string>
-    <string name="add_new_food">Add</string>
+    <string name="undo_string">Undo</string>
+    <string name="undo_snackbar_food">removed</string>
+    <string name="undo_snackbar_favorite">removed from favorites</string>
     <string name="hint_enter_food">Product</string>
     <string name="button_add">Add</string>
-    <string name="button_delete">Cancel</string>
+    <string name="button_cancel">Cancel</string>
     <string name="product_hint">Product</string>
-    <string name="_4_5">4.5</string>
-    <string name="name_of_dish">Name of dish</string>
     <string name="selected_food_type">Selected food type</string>
+    <string name="add_new_food">Add</string>
 </resources>

@@ -1,8 +1,6 @@
-package rtviwe.com.retabelo.main.fragments.recommendations
+package rtviwe.com.retabelo.recommendations
 
 import android.app.Application
-import android.content.Context
-import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -16,12 +14,9 @@ import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.recipe.RecipeDao
 import rtviwe.com.retabelo.database.recipe.RecipeDatabase
 import rtviwe.com.retabelo.database.recipe.RecipeEntry
-import rtviwe.com.retabelo.details.RecipeDetail
-import rtviwe.com.retabelo.details.RecipeDetail.Companion.EXTRA_BODY
-import rtviwe.com.retabelo.details.RecipeDetail.Companion.EXTRA_NAME
+import rtviwe.com.retabelo.database.recipe.RecipePresenter
 
 class RecommendationsAdapter(private val app: Application,
-                             private val context: Context,
                              options: FirestorePagingOptions<RecipeEntry>)
     : FirestorePagingAdapter<RecipeEntry, RecommendationsAdapter.RecommendationsViewHolder>(options) {
 
@@ -40,7 +35,7 @@ class RecommendationsAdapter(private val app: Application,
         private val recipesDatabase: RecipeDatabase = RecipeDatabase.getInstance(app)
         private val recipesDao: RecipeDao = recipesDatabase.recipeDao()
 
-        private val nameTextView = itemView.header_of_recipe
+        private val nameTextView = itemView.name_of_recipe
         private val markDownView = itemView.markdown_view
 
         fun bindTo(item: RecipeEntry) {
@@ -55,10 +50,7 @@ class RecommendationsAdapter(private val app: Application,
             RxView.clicks(itemView)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
-                        val intent = Intent(context, RecipeDetail::class.java)
-                        intent.putExtra(EXTRA_NAME, item.name)
-                        intent.putExtra(EXTRA_BODY, item.body)
-                        context.startActivity(intent)
+                        RecipePresenter.openActivity(app.applicationContext, item)
                     }
 
             RxView.clicks(itemView.favorite_button)

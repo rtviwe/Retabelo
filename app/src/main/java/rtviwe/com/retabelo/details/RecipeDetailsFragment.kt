@@ -22,7 +22,7 @@ class RecipeDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        name_detail_text_view.text = name
-        body_detail_text_view.text = body
+        name_of_recipe.text = name
+        markdown_view.loadMarkdown(body)
     }
 }

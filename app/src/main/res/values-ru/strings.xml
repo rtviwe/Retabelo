@@ -3,15 +3,14 @@
     <string name="app_name">Retabelo</string>
     <string name="text_recommendations">Рецепты</string>
     <string name="text_foods">Продукты</string>
-    <string name="text_favorites">Рекомендации</string>
-    <string name="text_if_foods_are_empty">Пусто</string>
-    <string name="undo_string">Отмена</string>
-    <string name="undo_snackbar">Отменить?</string>
-    <string name="add_new_food">Добавить</string>
-    <string name="hint_enter_food">Еда</string>
+    <string name="text_favorites">Избранное</string>
+    <string name="undo_string">Отменить</string>
+    <string name="undo_snackbar_food"> удалено</string>
+    <string name="undo_snackbar_favorite"> удалено из избранного</string>
+    <string name="hint_enter_food">Продукт</string>
     <string name="button_add">Добавить</string>
-    <string name="button_delete">Отменить</string>
-    <string name="product_hint">Еда</string>
-    <string name="_4_5">4.5</string>
-    <string name="name_of_dish">Название блюда</string>
+    <string name="button_cancel">Отменить</string>
+    <string name="product_hint">Продукт</string>
+    <string name="selected_food_type">Выбранный тип</string>
+    <string name="add_new_food">Добавить</string>
 </resources>

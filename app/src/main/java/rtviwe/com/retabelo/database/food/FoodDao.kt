@@ -13,7 +13,7 @@ interface FoodDao {
     fun getAllFoods(): DataSource.Factory<Int, FoodEntry>
 
     @Query("SELECT * FROM food WHERE id = :id")
-    fun getFoodsById(id: Int): DataSource.Factory<Int, FoodEntry>
+    fun getFoodById(id: Int): DataSource.Factory<Int, FoodEntry>
 
     @Query("SELECT * FROM food WHERE foodType = :foodType")
     fun getFoodsByType(foodType: FoodType): DataSource.Factory<Int, FoodEntry>

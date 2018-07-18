@@ -29,13 +29,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="56dp"
-        android:maxLines="1"
-        android:background="@android:color/transparent"
-        android:gravity="top"
         android:hint="@string/hint_enter_food"
-        android:inputType="textCapSentences|textMultiLine"
         android:lines="1"
-        android:textColorHint="@color/hint_enter_food"
         app:layout_constraintBottom_toBottomOf="@+id/scrollable_select_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/scrollable_select_icon"
@@ -48,7 +43,7 @@
             android:id="@+id/new_food_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLength="64" />
+            android:maxLength="40" />
 
     </android.support.design.widget.TextInputLayout>
 

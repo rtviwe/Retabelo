@@ -1,4 +1,4 @@
-package rtviwe.com.retabelo.main.fragments.foods
+package rtviwe.com.retabelo.foods
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -40,7 +40,7 @@ class AddFoodAlertDialog : DialogFragment() {
                 val name = view.new_food_edit_text.text
                 foodsViewModel.insertFood(FoodEntry(0, name.toString(), FoodType.ANY))
             }
-            setNegativeButton(getString(R.string.button_delete), null)
+            setNegativeButton(getString(R.string.button_cancel), null)
         }.create()
     }
 

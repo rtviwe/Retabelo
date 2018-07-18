@@ -1,9 +1,7 @@
-package rtviwe.com.retabelo.main.fragments.favorites
+package rtviwe.com.retabelo.favorites
 
 import android.app.Application
 import android.arch.paging.PagedListAdapter
-import android.content.Context
-import android.content.Intent
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -19,11 +17,10 @@ import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.recipe.RecipeDao
 import rtviwe.com.retabelo.database.recipe.RecipeDatabase
 import rtviwe.com.retabelo.database.recipe.RecipeEntry
-import rtviwe.com.retabelo.details.RecipeDetail
+import rtviwe.com.retabelo.database.recipe.RecipePresenter
 import rtviwe.com.retabelo.main.DiffCallback
 
-class FavoritesAdapter(private val context: Context,
-                       private val app: Application)
+class FavoritesAdapter(private val app: Application)
     : PagedListAdapter<RecipeEntry, FavoritesAdapter.FavoriteViewHolder>(DiffCallback<RecipeEntry>()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
@@ -42,7 +39,7 @@ class FavoritesAdapter(private val context: Context,
         private val recipesDatabase: RecipeDatabase = RecipeDatabase.getInstance(app)
         private val recipesDao: RecipeDao = recipesDatabase.recipeDao()
 
-        private val nameTextView = itemView.header_of_recipe
+        private val nameTextView = itemView.name_of_recipe
         private val markDownView = itemView.markdown_view
 
         private var removedLastRecipe: RecipeEntry? = null
@@ -59,10 +56,7 @@ class FavoritesAdapter(private val context: Context,
             RxView.clicks(itemView)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
-                        val intent = Intent(context, RecipeDetail::class.java)
-                        intent.putExtra(RecipeDetail.EXTRA_NAME, item.name)
-                        intent.putExtra(RecipeDetail.EXTRA_BODY, item.body)
-                        context.startActivity(intent)
+                        RecipePresenter.openActivity(app.applicationContext, item)
                     }
 
             RxView.clicks(itemView.favorite_button)
@@ -70,7 +64,8 @@ class FavoritesAdapter(private val context: Context,
                     .subscribe {
                         RecipeEntry.changeFavorite(recipesDao, item)
                         removedLastRecipe = item
-                        showSnackbar("Cancel deleting?", Snackbar.LENGTH_LONG)
+                        showSnackbar("${item.name} ${app.getString(R.string.undo_snackbar_favorite)}",
+                                Snackbar.LENGTH_LONG)
                     }
         }
 

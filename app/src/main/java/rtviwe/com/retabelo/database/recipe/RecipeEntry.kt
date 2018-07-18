@@ -39,9 +39,5 @@ data class RecipeEntry(
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe()
         }
-
-        fun cache(recipesDao: RecipeDao, item: RecipeEntry) {
-
-        }
     }
 }

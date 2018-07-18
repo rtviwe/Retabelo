@@ -1,4 +1,4 @@
-package rtviwe.com.retabelo.main.fragments.foods
+package rtviwe.com.retabelo.foods
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel

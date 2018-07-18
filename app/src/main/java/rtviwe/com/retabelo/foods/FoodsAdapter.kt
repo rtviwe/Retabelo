@@ -1,4 +1,4 @@
-package rtviwe.com.retabelo.main.fragments.foods
+package rtviwe.com.retabelo.foods
 
 import android.arch.paging.PagedListAdapter
 import android.support.v7.widget.RecyclerView

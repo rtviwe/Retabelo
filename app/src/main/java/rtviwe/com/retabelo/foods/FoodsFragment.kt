@@ -1,15 +1,18 @@
-package rtviwe.com.retabelo.main.fragments.foods
+package rtviwe.com.retabelo.foods
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import com.jakewharton.rxbinding2.support.design.widget.RxFloatingActionButton
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
@@ -19,12 +22,11 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.foods_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.database.food.FoodDatabase
-import rtviwe.com.retabelo.main.fragments.BaseFragment
 
 
-class FoodsFragment : BaseFragment() {
+class FoodsFragment : Fragment() {
 
-    override val layoutId = R.layout.foods_fragment
+    val layoutId = R.layout.foods_fragment
 
     private lateinit var foodsDatabase: FoodDatabase
     private lateinit var foodsAdapter: FoodsAdapter
@@ -33,6 +35,10 @@ class FoodsFragment : BaseFragment() {
 
     private val disposablePaging = CompositeDisposable()
     private var deletedFoodName = ""
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(layoutId, container, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -96,7 +102,7 @@ class FoodsFragment : BaseFragment() {
                 val selectedFood = (viewHolder as FoodsAdapter.FoodViewHolder).food
                 deletedFoodName = selectedFood.name
                 viewModel.deleteFood(selectedFood)
-                showSnackbar("Cancel deleting?", Snackbar.LENGTH_LONG)
+                showSnackbar("$deletedFoodName ${getString(R.string.undo_snackbar_food)}", Snackbar.LENGTH_LONG)
             }
         }).attachToRecyclerView(recycler_view_foods)
     }

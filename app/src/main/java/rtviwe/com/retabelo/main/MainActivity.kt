@@ -10,10 +10,10 @@ import com.google.android.gms.location.places.Places
 import com.jakewharton.rxbinding2.support.design.widget.RxBottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import rtviwe.com.retabelo.R
+import rtviwe.com.retabelo.favorites.FavoritesFragment
+import rtviwe.com.retabelo.foods.FoodsFragment
 import rtviwe.com.retabelo.geolocation.ConnectionListener
-import rtviwe.com.retabelo.main.fragments.favorites.FavoritesFragment
-import rtviwe.com.retabelo.main.fragments.foods.FoodsFragment
-import rtviwe.com.retabelo.main.fragments.recommendations.RecommendationsFragment
+import rtviwe.com.retabelo.recommendations.RecommendationsFragment
 
 
 class MainActivity : AppCompatActivity() {
