@@ -17,6 +17,6 @@ class FavoritesViewModel(app: Application) : AndroidViewModel(app) {
 
     val recipesList: Flowable<PagedList<RecipeEntry>> = RxPagedListBuilder(
             recipesDao.getAllFavoriteRecipes(),
-            50
+            20
     ).buildFlowable(BackpressureStrategy.LATEST)
 }

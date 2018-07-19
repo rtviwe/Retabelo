@@ -48,7 +48,7 @@ class FavoritesFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        disposablePaging.dispose()
+        disposablePaging.clear()
     }
 
     private fun initRecyclerView() {

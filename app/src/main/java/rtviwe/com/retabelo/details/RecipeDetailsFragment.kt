@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.recipe_detail_fragment.*
 import rtviwe.com.retabelo.R
+import rtviwe.com.retabelo.model.recipe.RecipePresenter
 
 class RecipeDetailsFragment : Fragment() {
 
@@ -23,6 +24,6 @@ class RecipeDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         name_of_recipe.text = name
-        markdown_view.loadMarkdown(body)
+        RecipePresenter.loadMarkdown(markdown_view, body)
     }
 }

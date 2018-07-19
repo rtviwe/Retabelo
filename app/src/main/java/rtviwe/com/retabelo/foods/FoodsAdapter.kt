@@ -12,8 +12,8 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.food_list_item.view.*
 import rtviwe.com.retabelo.R
-import rtviwe.com.retabelo.model.food.FoodEntry
 import rtviwe.com.retabelo.main.DiffCallback
+import rtviwe.com.retabelo.model.food.FoodEntry
 
 class FoodsAdapter
     : PagedListAdapter<FoodEntry, FoodsAdapter.FoodViewHolder>(DiffCallback<FoodEntry>()) {
@@ -43,11 +43,9 @@ class FoodsAdapter
 
             RxView.clicks(itemView)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
+                    .subscribe {
                         Log.v("FoodViewHolder", food.toString())
-                    }, {
-                        Log.e("FoodViewHolder", "Error when clicking on itemView: $it")
-                    })
+                    }
         }
     }
 }

@@ -9,7 +9,6 @@ import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +18,7 @@ import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.foods_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.model.food.FoodDatabase
@@ -34,6 +34,7 @@ class FoodsFragment : Fragment() {
     private lateinit var alertDialog: AddFoodAlertDialog
 
     private val disposablePaging = CompositeDisposable()
+    private val disposableDatabase = CompositeDisposable()
     private var deletedFoodName = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -62,7 +63,8 @@ class FoodsFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        disposablePaging.dispose()
+        disposablePaging.clear()
+        disposableDatabase.clear()
     }
 
     private fun initRecyclerView() {
@@ -83,11 +85,9 @@ class FoodsFragment : Fragment() {
     private fun initFab() {
         RxView.clicks(fab)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
+                .subscribe {
                     showAddFoodDialog()
-                }, {
-                    Log.e("FoodViewHolder", "Error when clicking on fab: $it")
-                })
+                }
     }
 
     private fun initSwipes() {
@@ -101,7 +101,12 @@ class FoodsFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                 val selectedFood = (viewHolder as FoodsAdapter.FoodViewHolder).food
                 deletedFoodName = selectedFood.name
-                viewModel.deleteFood(selectedFood)
+
+                disposableDatabase.add(viewModel.deleteFood(selectedFood)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe())
+
                 showSnackbar("$deletedFoodName ${getString(R.string.undo_snackbar_food)}", Snackbar.LENGTH_LONG)
             }
         }).attachToRecyclerView(recycler_view_foods)
@@ -110,7 +115,10 @@ class FoodsFragment : Fragment() {
     private fun showSnackbar(message: String, length: Int) {
         val snackbar = Snackbar.make(foods_coordinator_layout, message, length)
         snackbar.setAction(R.string.undo_string) {
-            viewModel.restoreFood()
+            disposableDatabase.add(viewModel.restoreFood()!!
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe())
         }
 
         snackbar.show()

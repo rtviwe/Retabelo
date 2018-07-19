@@ -10,18 +10,21 @@ import android.view.ViewGroup
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.favorites_fragment.view.*
 import kotlinx.android.synthetic.main.recipe_item.view.*
 import rtviwe.com.retabelo.R
+import rtviwe.com.retabelo.main.DiffCallback
 import rtviwe.com.retabelo.model.recipe.RecipeDao
 import rtviwe.com.retabelo.model.recipe.RecipeDatabase
 import rtviwe.com.retabelo.model.recipe.RecipeEntry
 import rtviwe.com.retabelo.model.recipe.RecipePresenter
-import rtviwe.com.retabelo.main.DiffCallback
 
 class FavoritesAdapter(private val app: Application)
     : PagedListAdapter<RecipeEntry, FavoritesAdapter.FavoriteViewHolder>(DiffCallback<RecipeEntry>()) {
+
+    private val disposableDatabase = CompositeDisposable()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -32,6 +35,11 @@ class FavoritesAdapter(private val app: Application)
 
     override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
         holder.bindTo(getItem(position)!!)
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        disposableDatabase.clear()
     }
 
     inner class FavoriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -51,7 +59,7 @@ class FavoritesAdapter(private val app: Application)
                     .split(" ")
                     .joinToString(limit = 50, separator = " ")
 
-            markDownView.loadMarkdown(previewText)
+            RecipePresenter.loadMarkdown(markDownView, previewText)
 
             RxView.clicks(itemView)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -80,13 +88,12 @@ class FavoritesAdapter(private val app: Application)
 
         private fun restoreFavoriteRecipe() {
             if (removedLastRecipe != null) {
-                Completable.create {
-                    RecipeEntry.changeFavorite(recipesDao, removedLastRecipe!!)
-                    it.onComplete()
-                }
+                disposableDatabase.add(Completable.fromAction {
+                            RecipeEntry.changeFavorite(recipesDao, removedLastRecipe!!)
+                        }
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe()
+                        .subscribe())
             }
         }
     }

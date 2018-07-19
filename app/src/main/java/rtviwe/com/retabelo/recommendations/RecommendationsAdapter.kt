@@ -18,6 +18,7 @@ import rtviwe.com.retabelo.model.recipe.RecipeDatabase
 import rtviwe.com.retabelo.model.recipe.RecipeEntry
 import rtviwe.com.retabelo.model.recipe.RecipePresenter
 
+
 class RecommendationsAdapter(private val fragment: Fragment,
                              options: FirestorePagingOptions<RecipeEntry>)
     : FirestorePagingAdapter<RecipeEntry, RecommendationsAdapter.RecommendationsViewHolder>(options) {
@@ -58,7 +59,7 @@ class RecommendationsAdapter(private val fragment: Fragment,
                     .split(" ")
                     .joinToString(limit = 50, separator = " ")
 
-            markDownView.loadMarkdown(previewText)
+            RecipePresenter.loadMarkdown(markDownView, previewText)
 
             RxView.clicks(itemView)
                     .observeOn(AndroidSchedulers.mainThread())

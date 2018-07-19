@@ -9,6 +9,9 @@ import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.add_food_dialog.view.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.model.food.FoodEntry
@@ -19,6 +22,8 @@ class AddFoodAlertDialog : DialogFragment() {
 
     private lateinit var textInput: EditText
     lateinit var foodsViewModel: FoodsViewModel
+
+    private val disposableDatabase = CompositeDisposable()
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -39,9 +44,19 @@ class AddFoodAlertDialog : DialogFragment() {
             setPositiveButton(getString(R.string.button_add)) { _, _ ->
                 val name = view.new_food_edit_text.text
                 foodsViewModel.insertFood(FoodEntry(0, name.toString(), FoodType.ANY))
+
+                disposableDatabase.add(foodsViewModel.insertFood(FoodEntry(0, name.toString(), FoodType.ANY))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe())
             }
             setNegativeButton(getString(R.string.button_cancel), null)
         }.create()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposableDatabase.clear()
     }
 
     private fun showKeyboard() {
