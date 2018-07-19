@@ -3,8 +3,6 @@ package rtviwe.com.retabelo.favorites
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -53,7 +51,6 @@ class FavoritesFragment : Fragment() {
 
     private fun initRecyclerView() {
         recycler_view_favorites.apply {
-            addItemDecoration(DividerItemDecoration(activity?.applicationContext, VERTICAL))
             layoutManager = LinearLayoutManager(context)
             adapter = favoritesAdapter
         }
