@@ -31,6 +31,7 @@
         android:layout_marginStart="56dp"
         android:hint="@string/hint_enter_food"
         android:lines="1"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         app:layout_constraintBottom_toBottomOf="@+id/scrollable_select_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/scrollable_select_icon"
