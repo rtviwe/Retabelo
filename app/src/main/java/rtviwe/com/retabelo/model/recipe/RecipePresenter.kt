@@ -2,9 +2,13 @@ package rtviwe.com.retabelo.model.recipe
 
 import android.content.Context
 import android.content.Intent
+import android.text.method.LinkMovementMethod
 import rtviwe.com.retabelo.details.RecipeDetail
 import ru.noties.markwon.Markwon
+import ru.noties.markwon.SpannableConfiguration
+import ru.noties.markwon.renderer.SpannableRenderer
 import ru.noties.markwon.view.MarkwonView
+
 
 object RecipePresenter {
 
@@ -15,7 +19,21 @@ object RecipePresenter {
         context.startActivity(intent)
     }
 
-    fun loadMarkdown(markDownView: MarkwonView, text: String) {
-        Markwon.setMarkdown(markDownView, text)
+    fun loadMarkdown(context: Context, markDownView: MarkwonView, text: String) {
+        val parser = Markwon.createParser()
+
+        val configuration = SpannableConfiguration.create(context)
+
+        val renderer = SpannableRenderer()
+
+        val node = parser.parse(text)
+        val markdown = renderer.render(configuration, node)
+
+        markDownView.movementMethod = LinkMovementMethod.getInstance()
+
+        markDownView.text = markdown
+
+        Markwon.scheduleDrawables(markDownView)
+        Markwon.scheduleTableRows(markDownView)
     }
 }

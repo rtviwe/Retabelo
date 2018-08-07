@@ -1,6 +1,6 @@
 package rtviwe.com.retabelo.main
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 import rtviwe.com.retabelo.model.Entry
 
 /**

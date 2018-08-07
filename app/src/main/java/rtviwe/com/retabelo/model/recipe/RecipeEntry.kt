@@ -1,8 +1,8 @@
 package rtviwe.com.retabelo.model.recipe
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.PrimaryKey
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import com.google.firebase.firestore.IgnoreExtraProperties
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers

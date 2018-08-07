@@ -1,6 +1,6 @@
 package rtviwe.com.retabelo.model.food
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 
 class FoodTypeConverter {
 

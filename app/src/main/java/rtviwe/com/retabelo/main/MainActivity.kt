@@ -1,12 +1,12 @@
 package rtviwe.com.retabelo.main
 
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.places.Places
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jakewharton.rxbinding2.support.design.widget.RxBottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import rtviwe.com.retabelo.R

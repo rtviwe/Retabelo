@@ -1,12 +1,12 @@
 package rtviwe.com.retabelo.favorites
 
 import android.app.Application
-import android.arch.paging.PagedListAdapter
-import android.support.design.widget.Snackbar
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -59,7 +59,7 @@ class FavoritesAdapter(private val app: Application)
                     .split(" ")
                     .joinToString(limit = 50, separator = " ")
 
-            RecipePresenter.loadMarkdown(markDownView, previewText)
+            RecipePresenter.loadMarkdown(app.applicationContext, markDownView, previewText)
 
             RxView.clicks(itemView)
                     .observeOn(AndroidSchedulers.mainThread())

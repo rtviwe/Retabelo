@@ -1,7 +1,7 @@
 package rtviwe.com.retabelo.model.recipe
 
-import android.arch.paging.DataSource
-import android.arch.persistence.room.*
+import androidx.paging.DataSource
+import androidx.room.*
 
 @Dao
 interface RecipeDao {

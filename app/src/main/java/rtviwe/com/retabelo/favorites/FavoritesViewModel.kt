@@ -1,9 +1,9 @@
 package rtviwe.com.retabelo.favorites
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.paging.PagedList
-import android.arch.paging.RxPagedListBuilder
+import androidx.lifecycle.AndroidViewModel
+import androidx.paging.PagedList
+import androidx.paging.RxPagedListBuilder
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import rtviwe.com.retabelo.model.recipe.RecipeDao

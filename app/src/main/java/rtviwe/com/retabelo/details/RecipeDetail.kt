@@ -1,7 +1,7 @@
 package rtviwe.com.retabelo.details
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import rtviwe.com.retabelo.R
 
 class RecipeDetail : AppCompatActivity() {
