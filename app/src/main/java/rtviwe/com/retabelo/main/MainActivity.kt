@@ -3,6 +3,7 @@ package rtviwe.com.retabelo.main
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.transaction
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.places.Places
@@ -72,10 +73,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setFragmentToContainer(fragment: Fragment?) {
         if (fragment != null) {
-            supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.main_container, fragment)
-                    .commit()
+            supportFragmentManager.transaction(allowStateLoss = true) {
+                replace(R.id.main_container, fragment)
+            }
         }
     }
 }

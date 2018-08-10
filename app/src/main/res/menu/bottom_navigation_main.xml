@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_recommendations"
         android:enabled="true"
         android:icon="@drawable/ic_new_releases_black_24dp"
         android:title="@string/text_recommendations"
-        app:showAsAction="ifRoom" />
+        android:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_favorites"
         android:enabled="true"
         android:icon="@drawable/ic_favorite_black_24dp"
         android:title="@string/text_favorites"
-        app:showAsAction="ifRoom" />
+        android:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_foods"
         android:enabled="true"
         android:icon="@drawable/ic_receipt_black_24dp"
         android:title="@string/text_foods"
-        app:showAsAction="ifRoom" />
+        android:showAsAction="ifRoom" />
 </menu>
