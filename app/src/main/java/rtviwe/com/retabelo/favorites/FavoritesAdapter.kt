@@ -16,10 +16,7 @@ import kotlinx.android.synthetic.main.favorites_fragment.view.*
 import kotlinx.android.synthetic.main.recipe_item.view.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.main.DiffCallback
-import rtviwe.com.retabelo.model.recipe.RecipeDao
-import rtviwe.com.retabelo.model.recipe.RecipeDatabase
-import rtviwe.com.retabelo.model.recipe.RecipeEntry
-import rtviwe.com.retabelo.model.recipe.RecipePresenter
+import rtviwe.com.retabelo.model.recipe.*
 
 class FavoritesAdapter(private val app: Application)
     : PagedListAdapter<RecipeEntry, FavoritesAdapter.FavoriteViewHolder>(DiffCallback<RecipeEntry>()) {
@@ -48,7 +45,7 @@ class FavoritesAdapter(private val app: Application)
         private val recipesDao: RecipeDao = recipesDatabase.recipeDao()
 
         private val nameTextView = itemView.name_of_recipe
-        private val markDownView = itemView.markdown_view
+        private val webView = itemView.web_view
 
         private var removedLastRecipe: RecipeEntry? = null
 
@@ -59,12 +56,12 @@ class FavoritesAdapter(private val app: Application)
                     .split(" ")
                     .joinToString(limit = 50, separator = " ")
 
-            RecipePresenter.loadMarkdown(app.applicationContext, markDownView, previewText)
+            loadWebView(webView, previewText)
 
             RxView.clicks(itemView)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
-                        RecipePresenter.openActivity(app.applicationContext, item)
+                        openActivity(app.applicationContext, item)
                     }
 
             RxView.clicks(itemView.favorite_button)

@@ -13,10 +13,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.recipe_item.view.*
 import kotlinx.android.synthetic.main.recommendations_fragment.*
 import rtviwe.com.retabelo.R
-import rtviwe.com.retabelo.model.recipe.RecipeDao
-import rtviwe.com.retabelo.model.recipe.RecipeDatabase
-import rtviwe.com.retabelo.model.recipe.RecipeEntry
-import rtviwe.com.retabelo.model.recipe.RecipePresenter
+import rtviwe.com.retabelo.model.recipe.*
 
 
 class RecommendationsAdapter(private val fragment: Fragment,
@@ -50,7 +47,7 @@ class RecommendationsAdapter(private val fragment: Fragment,
         private val recipesDao: RecipeDao = recipesDatabase.recipeDao()
 
         private val nameTextView = itemView.name_of_recipe
-        private val markDownView = itemView.markdown_view
+        private val webView = itemView.web_view
 
         fun bindTo(item: RecipeEntry) {
             nameTextView.text = item.name
@@ -59,12 +56,12 @@ class RecommendationsAdapter(private val fragment: Fragment,
                     .split(" ")
                     .joinToString(limit = 50, separator = " ")
 
-            RecipePresenter.loadMarkdown(fragment.context!!, markDownView, previewText)
+            loadWebView(webView, previewText)
 
             RxView.clicks(itemView)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
-                        RecipePresenter.openActivity(fragment.context!!, item)
+                        openActivity(fragment.context!!, item)
                     }
 
             RxView.clicks(itemView.favorite_button)
