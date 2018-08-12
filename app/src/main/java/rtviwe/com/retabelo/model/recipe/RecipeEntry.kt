@@ -1,5 +1,6 @@
 package rtviwe.com.retabelo.model.recipe
 
+import android.widget.CheckBox
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
@@ -35,6 +36,15 @@ data class RecipeEntry(
                             recipesDao.deleteRecipeByName(item.name)
                         }
                     }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe())
+        }
+
+        fun setIsFavorite(recipesDao: RecipeDao, item: RecipeEntry, icon: CheckBox): Boolean {
+            return CompositeDisposable().add(Completable.fromAction {
+                icon.isChecked = recipesDao.findRecipeByName(item.name) != null
+            }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe())

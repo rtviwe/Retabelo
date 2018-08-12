@@ -15,10 +15,10 @@ interface RecipeDao {
     @Query("SELECT * FROM recipe WHERE id = :id")
     fun getRecipeById(id: Int): DataSource.Factory<Int, RecipeEntry>
 
-    @Query("SELECT * FROM recipe WHERE isFavorite = 1")
+    @Query("SELECT * FROM recipe WHERE isFavorite  = 1")
     fun getAllFavoriteRecipes(): DataSource.Factory<Int, RecipeEntry>
 
-    @Query("SELECT * FROM recipe WHERE isFavorite = 1 AND id = :id")
+    @Query("SELECT * FROM recipe WHERE isFavorite  = 1 AND id = :id")
     fun getFavoriteRecipeById(id: Int): DataSource.Factory<Int, RecipeEntry>
 
     @Query("SELECT * FROM recipe WHERE name = :name")
