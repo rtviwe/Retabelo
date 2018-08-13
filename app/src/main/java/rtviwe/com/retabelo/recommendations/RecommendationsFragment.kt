@@ -36,7 +36,7 @@ class RecommendationsFragment : Fragment() {
         val queryForRecipes = firebaseFirestore.collection("recipes")
 
         val config = PagedList.Config.Builder().apply {
-            setPageSize(20)
+            setPageSize(10)
             setEnablePlaceholders(true)
         }.build()
 
