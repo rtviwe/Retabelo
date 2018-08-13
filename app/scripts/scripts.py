@@ -73,11 +73,17 @@ def script2():
         time.sleep(3)
 
 
-# fixing ims src
+# fixing html
 def script3():
     lines = open(CONTENT_FILE, 'a+', encoding='utf-8').readlines()
     for line in lines:
         line.replace('src="//', 'src="https://')
+        line.replace('h6', 'p')
+        line.replace('h5', 'p')
+        line.replace('h4', 'p')
+        line.replace('h3', 'p')
+        line.replace('h2', 'p')
+        line.replace('h1', 'p')
 
 
 # add data to firestore
@@ -91,6 +97,7 @@ def script4():
     prev_line_is_end = True
 
     lines = open(CONTENT_FILE, 'r', encoding='utf-8').readlines()
+    i = 0
     for line in lines:
         print(line)
         if prev_line_is_end:
@@ -100,7 +107,8 @@ def script4():
         body += line
 
         if line == '--end--\n':
-            recipes_ref = db.collection(u'recipes').document(name)
+            i += 1
+            recipes_ref = db.collection(u'recipes').document(str(i))
 
             recipes_ref.set({
                 u'name': name,
@@ -112,16 +120,8 @@ def script4():
             prev_line_is_end = True
 
 
-# replace h2 to h3 and h3 to h4
-def script5():
-    lines = open(CONTENT_FILE, 'a+', encoding='utf-8').readlines()
-    for line in lines:
-        line.replace('h3', 'h4')
-        line.replace('h2', 'h3')
-
-
 # delete firestore
-def script6():
+def script5():
     cred = credentials.Certificate('retabelo-a2065-firebase-adminsdk-qu4g4-bcbe24f1c7.json')
     firebase_admin.initialize_app(cred)
     db = firestore.client()
@@ -146,5 +146,5 @@ if __name__ == '__main__':
     script2()
     script3()
     script4()
-    script5()
+    # script5()
     pass
