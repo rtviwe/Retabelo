@@ -62,7 +62,7 @@ class RecommendationsAdapter(private val fragment: Fragment,
 
             RecipePresenter.loadWebView(webView, previewText)
 
-            RecipeEntry.setIsFavorite(recipesDao, item, favoriteButton)
+            RecipeEntry.setIsFavorite(recipesDao, item.name, favoriteButton)
 
             RxView.clicks(itemView)
                     .observeOn(AndroidSchedulers.mainThread())

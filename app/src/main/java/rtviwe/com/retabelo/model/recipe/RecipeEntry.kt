@@ -41,9 +41,9 @@ data class RecipeEntry(
                     .subscribe())
         }
 
-        fun setIsFavorite(recipesDao: RecipeDao, item: RecipeEntry, icon: CheckBox): Boolean {
+        fun setIsFavorite(recipesDao: RecipeDao, name: String, icon: CheckBox): Boolean {
             return CompositeDisposable().add(Completable.fromAction {
-                icon.isChecked = recipesDao.findRecipeByName(item.name) != null
+                icon.isChecked = recipesDao.findRecipeByName(name) != null
             }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

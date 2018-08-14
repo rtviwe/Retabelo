@@ -20,13 +20,28 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:maxLines="2"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:typeface="sans"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/web_view"
+            app:layout_constraintEnd_toStartOf="@+id/favorite_button"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/favorite_button_in_details"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/white"
+            android:button="@drawable/ic_toggle_button"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <WebView

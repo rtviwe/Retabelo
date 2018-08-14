@@ -4,22 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.favorites_fragment.*
 import rtviwe.com.retabelo.R
+import rtviwe.com.retabelo.main.MainBaseFragment
 import rtviwe.com.retabelo.model.recipe.RecipeDatabase
 
 
-class FavoritesFragment : Fragment() {
+class FavoritesFragment : MainBaseFragment() {
 
     val layoutId = R.layout.favorites_fragment
 
     private lateinit var recipesDatabase: RecipeDatabase
     private lateinit var favoritesAdapter: FavoritesAdapter
     private lateinit var viewModel: FavoritesViewModel
+    private lateinit var favoritesLayoutManager: LinearLayoutManager
 
     private val disposablePaging = CompositeDisposable()
 
@@ -49,9 +51,15 @@ class FavoritesFragment : Fragment() {
         disposablePaging.clear()
     }
 
+    override fun scrollToTop() {
+        favoritesLayoutManager.smoothScrollToPosition(recycler_view_favorites, RecyclerView.State(), 0)
+    }
+
     private fun initRecyclerView() {
+        favoritesLayoutManager = LinearLayoutManager(context)
+
         recycler_view_favorites.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = favoritesLayoutManager
             adapter = favoritesAdapter
         }
     }

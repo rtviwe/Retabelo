@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
@@ -21,10 +20,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.foods_fragment.*
 import rtviwe.com.retabelo.R
+import rtviwe.com.retabelo.main.MainBaseFragment
 import rtviwe.com.retabelo.model.food.FoodDatabase
 
 
-class FoodsFragment : Fragment() {
+class FoodsFragment : MainBaseFragment() {
 
     val layoutId = R.layout.foods_fragment
 
@@ -32,6 +32,7 @@ class FoodsFragment : Fragment() {
     private lateinit var foodsAdapter: FoodsAdapter
     private lateinit var viewModel: FoodsViewModel
     private lateinit var alertDialog: AddFoodAlertDialog
+    private lateinit var foodsLayoutManager: LinearLayoutManager
 
     private val disposablePaging = CompositeDisposable()
     private val disposableDatabase = CompositeDisposable()
@@ -67,10 +68,16 @@ class FoodsFragment : Fragment() {
         disposableDatabase.clear()
     }
 
+    override fun scrollToTop() {
+        foodsLayoutManager.smoothScrollToPosition(recycler_view_foods, RecyclerView.State(), 0)
+    }
+
     private fun initRecyclerView() {
+        foodsLayoutManager = LinearLayoutManager(context)
+
         recycler_view_foods.apply {
             addItemDecoration(DividerItemDecoration(activity?.applicationContext, VERTICAL))
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = foodsLayoutManager
             adapter = foodsAdapter
         }
 
