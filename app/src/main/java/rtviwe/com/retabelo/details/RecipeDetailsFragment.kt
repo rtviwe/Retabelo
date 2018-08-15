@@ -47,11 +47,11 @@ class RecipeDetailsFragment : Fragment() {
                 .subscribe {
                     disposableFavorite.add(
                             Completable.fromAction {
-                                val item = recipesDao.findRecipeByName(name)
-                                if (item != null) {
-                                    RecipeEntry.changeFavorite(recipesDao, item)
-                                }
-                            }
+                                        val item = recipesDao.findRecipeByName(name)
+                                        if (item != null) {
+                                            RecipeEntry.changeFavorite(recipesDao, item)
+                                        }
+                                    }
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe()

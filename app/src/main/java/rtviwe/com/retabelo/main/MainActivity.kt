@@ -1,6 +1,7 @@
 package rtviwe.com.retabelo.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.transaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -30,7 +31,8 @@ class MainActivity : AppCompatActivity() {
                 val fragment = getFragmentFromId(currentFragmentId)
                 currentFragment = fragment
                 setFragmentToContainer(currentFragment)
-            } else {
+            } else if (currentFragmentId == bottom_navigation.selectedItemId) {
+                Log.v("HERE", "$currentFragment")
                 scrollFragmentToTop(currentFragment)
             }
         }
@@ -47,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         currentFragmentId = savedInstanceState.getInt(CURRENT_FRAGMENT_ID)
-        val currentFragment = getFragmentFromId(currentFragmentId)
+        currentFragment = getFragmentFromId(currentFragmentId)
         setFragmentToContainer(currentFragment)
     }
 

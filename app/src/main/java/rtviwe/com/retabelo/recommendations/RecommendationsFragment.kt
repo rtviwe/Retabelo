@@ -37,7 +37,7 @@ class RecommendationsFragment : MainBaseFragment() {
     }
 
     override fun scrollToTop() {
-        recommendationsLayoutManager.smoothScrollToPosition(recommendationsRecyclerView, RecyclerView.State(), 0)
+        recommendationsLayoutManager.scrollToPosition(0)
     }
 
     private fun initAdapter() {
