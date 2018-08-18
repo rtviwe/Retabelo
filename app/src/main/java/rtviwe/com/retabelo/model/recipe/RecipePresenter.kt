@@ -16,6 +16,7 @@ object RecipePresenter {
     }
 
     fun loadWebView(webView: WebView, text: String) {
-        webView.loadData(text, "text/html", "UTF-8")
+        val htmlData = "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />$text"
+        webView.loadDataWithBaseURL("file:///android_asset/", htmlData, "text/html", "UTF-8", null)
     }
 }
