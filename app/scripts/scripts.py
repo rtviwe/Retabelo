@@ -21,8 +21,8 @@ def download_html(url) -> BeautifulSoup:
 
 # get links
 def script1():
+    url = f"{BASE_URL}/linkz_start-1.html"
     for i in range(1, 50):
-        url = f"{BASE_URL}/linkz_start-{i * 20}.html"
         soup = download_html(url)
         div = soup.find('div', class_='lst')
         refs = div.find_all('a')
@@ -37,7 +37,8 @@ def script1():
             file.write('\n')
             file.close()
 
-        time.sleep(3)
+        url = f"{BASE_URL}/linkz_start-{i * 20}.html"
+        time.sleep(1)
 
 
 # get content
@@ -51,16 +52,16 @@ def script2():
         main_div = soup.find('div', class_='article h-recipe')
         title = main_div.find('h1').text
         body = main_div.contents
-        for item in body:
+        for index, item in enumerate(body):
             str_item = str(item)
 
             if str_item.startswith('<div id="sign">'):
                 break
 
-            if str_item.startswith('<h1 itemprop="name">'):
+            if str_item.startswith('<h1 itemprop="name">') or (index == 0) or str_item == '\n':
                 continue
 
-            content += str_item
+            content += fix_line(str_item)
 
         file = open(CONTENT_FILE, 'a', encoding='utf-8')
         file.write(title)
@@ -70,24 +71,18 @@ def script2():
         file.write('--end--\n')
         file.close()
 
-        time.sleep(3)
+        time.sleep(1)
 
 
-# fixing html
-def script3():
-    lines = open(CONTENT_FILE, 'a+', encoding='utf-8').readlines()
-    for line in lines:
-        line.replace('src="//', 'src="https://')
-        line.replace('h6', 'p')
-        line.replace('h5', 'p')
-        line.replace('h4', 'p')
-        line.replace('h3', 'p')
-        line.replace('h2', 'p')
-        line.replace('h1', 'p')
+# fixing line
+def fix_line(line) -> str:
+    line = line.replace('src="//', 'src="https://').replace('h6', 'p').replace('h5', 'p').replace('h4', 'p')\
+        .replace('h3', 'p').replace('h2', 'p').replace('h1', 'p').replace('<a', '<p').replace('</a', '</p')
+    return line
 
 
 # add data to firestore
-def script4():
+def script3():
     cred = credentials.Certificate('retabelo-a2065-firebase-adminsdk-qu4g4-bcbe24f1c7.json')
     firebase_admin.initialize_app(cred)
     db = firestore.client()
@@ -99,7 +94,6 @@ def script4():
     lines = open(CONTENT_FILE, 'r', encoding='utf-8').readlines()
     i = 0
     for line in lines:
-        print(line)
         if prev_line_is_end:
             name = line
             prev_line_is_end = False
@@ -121,7 +115,7 @@ def script4():
 
 
 # delete firestore
-def script5():
+def script4():
     cred = credentials.Certificate('retabelo-a2065-firebase-adminsdk-qu4g4-bcbe24f1c7.json')
     firebase_admin.initialize_app(cred)
     db = firestore.client()
@@ -135,7 +129,7 @@ def delete_collection(coll_ref, batch_size):
 
     for doc in docs:
         doc.reference.delete()
-        deleted = deleted + 1
+        deleted += 1
 
     if deleted >= batch_size:
         return delete_collection(coll_ref, batch_size)
@@ -145,6 +139,5 @@ if __name__ == '__main__':
     script1()
     script2()
     script3()
-    script4()
-    # script5()
+    # script4()
     pass
