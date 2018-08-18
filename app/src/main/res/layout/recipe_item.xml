@@ -8,12 +8,16 @@
     android:clickable="true"
     android:elevation="4dp"
     android:focusable="true"
-    android:layout_margin="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="5dp"
     android:foreground="?android:attr/selectableItemBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp">
 
         <TextView
             android:id="@+id/name_of_recipe"
@@ -24,7 +28,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="@android:color/black"
             android:textSize="24sp"
             android:typeface="sans"
             app:layout_constraintBottom_toTopOf="@+id/web_view"
@@ -40,7 +44,7 @@
             android:layout_marginTop="8dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:background="@android:color/white"
+            android:background="@android:color/transparent"
             android:textOff=""
             android:textOn=""
             android:button="@drawable/ic_toggle_button"
@@ -51,9 +55,8 @@
             android:id="@+id/web_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

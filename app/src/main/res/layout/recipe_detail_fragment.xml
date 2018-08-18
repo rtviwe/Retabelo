@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/recommended_card"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/recommended_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
@@ -23,7 +23,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="@android:color/black"
             android:textSize="24sp"
             android:typeface="sans"
             app:layout_constraintBottom_toTopOf="@+id/web_view"
@@ -39,7 +39,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
-            android:background="@android:color/white"
+            android:background="@android:color/transparent"
             android:button="@drawable/ic_toggle_button"
             android:textOff=""
             android:textOn=""
