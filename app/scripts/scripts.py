@@ -135,9 +135,28 @@ def delete_collection(coll_ref, batch_size):
         return delete_collection(coll_ref, batch_size)
 
 
+# edit firestore
+def script5():
+    cred = credentials.Certificate('retabelo-a2065-firebase-adminsdk-qu4g4-bcbe24f1c7.json')
+    firebase_admin.initialize_app(cred)
+    db = firestore.client()
+    collection_ref = db.collection(u'recipes')
+    docs = collection_ref.get()
+
+    for doc in docs:
+        name = doc.to_dict()['name']
+        body = doc.to_dict()['body'].replace('--end--', '').replace(name, '', 1)
+        print(body)
+        doc.reference.set({
+            u'name': name,
+            u'body': body
+        })
+
+
 if __name__ == '__main__':
     script1()
     script2()
     script3()
     # script4()
+    script5()
     pass
