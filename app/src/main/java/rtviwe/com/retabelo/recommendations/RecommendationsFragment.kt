@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.favorites_fragment.*
 import kotlinx.android.synthetic.main.recommendations_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.main.MainBaseFragment
@@ -17,7 +18,7 @@ import rtviwe.com.retabelo.model.recipe.RecipeEntry
 
 class RecommendationsFragment : MainBaseFragment() {
 
-    val layoutId = R.layout.recommendations_fragment
+    override val layoutId = R.layout.recommendations_fragment
 
     private val firebaseFirestore = FirebaseFirestore.getInstance()
 
@@ -37,7 +38,7 @@ class RecommendationsFragment : MainBaseFragment() {
     }
 
     override fun scrollToTop() {
-        recommendationsLayoutManager.scrollToPosition(0)
+        recommendationsLayoutManager.smoothScrollToPosition(recycler_view_favorites, RecyclerView.State(), 0)
     }
 
     private fun initAdapter() {
@@ -61,10 +62,9 @@ class RecommendationsFragment : MainBaseFragment() {
     private fun initRecyclerView() {
         recommendationsLayoutManager = LinearLayoutManager(context)
 
-        recycler_view_recommendations.apply {
+        recommendationsRecyclerView = recycler_view_recommendations.apply {
             layoutManager = recommendationsLayoutManager
             adapter = recommendationsAdapter
         }
-        recommendationsRecyclerView = recycler_view_recommendations
     }
 }

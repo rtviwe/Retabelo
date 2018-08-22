@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.support.design.widget.RxFloatingActionButton
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
-import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -26,12 +25,11 @@ import rtviwe.com.retabelo.model.food.FoodDatabase
 
 class FoodsFragment : MainBaseFragment() {
 
-    val layoutId = R.layout.foods_fragment
+    override val layoutId = R.layout.foods_fragment
 
     private lateinit var foodsDatabase: FoodDatabase
     private lateinit var foodsAdapter: FoodsAdapter
     private lateinit var viewModel: FoodsViewModel
-    private lateinit var alertDialog: AddFoodAlertDialog
     private lateinit var foodsLayoutManager: LinearLayoutManager
 
     private val disposablePaging = CompositeDisposable()
@@ -90,11 +88,9 @@ class FoodsFragment : MainBaseFragment() {
     }
 
     private fun initFab() {
-        RxView.clicks(fab)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    showAddFoodDialog()
-                }
+        fab.setOnClickListener {
+            showAddFoodDialog()
+        }
     }
 
     private fun initSwipes() {
@@ -120,22 +116,17 @@ class FoodsFragment : MainBaseFragment() {
     }
 
     private fun showSnackbar(message: String, length: Int) {
-        val snackbar = Snackbar.make(foods_coordinator_layout, message, length)
-        snackbar.setAction(R.string.undo_string) {
+        Snackbar.make(foods_coordinator_layout, message, length).setAction(R.string.undo_string) {
             disposableDatabase.add(viewModel.restoreFood()!!
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe())
-        }
-
-        snackbar.show()
+        }.show()
     }
 
     private fun showAddFoodDialog() {
-        alertDialog = AddFoodAlertDialog()
-        alertDialog.apply {
+        AddFoodAlertDialog().apply {
             foodsViewModel = viewModel
-        }
-        alertDialog.show(childFragmentManager, "AddFoodDialog")
+        }.show(childFragmentManager, "AddFoodDialog")
     }
 }

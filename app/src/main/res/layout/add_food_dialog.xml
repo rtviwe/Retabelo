@@ -37,9 +37,6 @@
         app:layout_constraintStart_toEndOf="@+id/scrollable_select_icon"
         app:layout_constraintTop_toTopOf="@+id/scrollable_select_icon">
 
-        <!-- TODO: Add this to TextInputLayout when api 28.0.0-alpha3+
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense" -->
-
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/new_food_edit_text"
             android:layout_width="match_parent"

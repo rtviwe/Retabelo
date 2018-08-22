@@ -1,7 +1,6 @@
 package rtviwe.com.retabelo.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.transaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -15,7 +14,7 @@ import rtviwe.com.retabelo.recommendations.RecommendationsFragment
 
 class MainActivity : AppCompatActivity() {
 
-    private val CURRENT_FRAGMENT_ID = "Current fragment"
+    private val currentFragmentTag = "Current fragment"
 
     private var currentFragmentId = R.id.action_recommendations
     private var currentFragment: MainBaseFragment? = null
@@ -25,14 +24,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         RxBottomNavigationView.itemSelections(bottom_navigation as BottomNavigationView).subscribe {
-            val currentFragmentId = it.itemId
+            currentFragmentId = it.itemId
 
             if (currentFragmentId != bottom_navigation.selectedItemId) {
                 val fragment = getFragmentFromId(currentFragmentId)
                 currentFragment = fragment
-                setFragmentToContainer(currentFragment)
+                setFragmentToContainer(fragment)
             } else if (currentFragmentId == bottom_navigation.selectedItemId) {
-                Log.v("HERE", "$currentFragment")
                 scrollFragmentToTop(currentFragment)
             }
         }
@@ -43,12 +41,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(CURRENT_FRAGMENT_ID, bottom_navigation.selectedItemId)
+        outState.putInt(currentFragmentTag, bottom_navigation.selectedItemId)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        currentFragmentId = savedInstanceState.getInt(CURRENT_FRAGMENT_ID)
+        currentFragmentId = savedInstanceState.getInt(currentFragmentTag)
         currentFragment = getFragmentFromId(currentFragmentId)
         setFragmentToContainer(currentFragment)
     }

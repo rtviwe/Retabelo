@@ -16,7 +16,7 @@ import rtviwe.com.retabelo.model.recipe.RecipeDatabase
 
 class FavoritesFragment : MainBaseFragment() {
 
-    val layoutId = R.layout.favorites_fragment
+    override val layoutId = R.layout.favorites_fragment
 
     private lateinit var recipesDatabase: RecipeDatabase
     private lateinit var favoritesAdapter: FavoritesAdapter

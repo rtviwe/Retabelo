@@ -12,8 +12,7 @@ import rtviwe.com.retabelo.model.recipe.RecipeEntry
 
 class FavoritesViewModel(app: Application) : AndroidViewModel(app) {
 
-    private val recipesDatabase: RecipeDatabase = RecipeDatabase.getInstance(this.getApplication())
-    private val recipesDao: RecipeDao = recipesDatabase.recipeDao()
+    private val recipesDao: RecipeDao = RecipeDatabase.getInstance(this.getApplication()).recipeDao()
 
     val recipesList: Flowable<PagedList<RecipeEntry>> = RxPagedListBuilder(
             recipesDao.getAllFavoriteRecipes(),

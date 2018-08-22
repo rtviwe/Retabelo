@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -34,7 +33,10 @@ class FavoritesAdapter(private val app: Application)
     }
 
     override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
-        holder.bindTo(getItem(position)!!)
+        val item: RecipeEntry? = getItem(position)
+        if (item != null) {
+            holder.bindTo(item)
+        }
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
@@ -44,8 +46,7 @@ class FavoritesAdapter(private val app: Application)
 
     inner class FavoriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val recipesDatabase: RecipeDatabase = RecipeDatabase.getInstance(app)
-        private val recipesDao: RecipeDao = recipesDatabase.recipeDao()
+        private val recipesDao: RecipeDao = RecipeDatabase.getInstance(app).recipeDao()
 
         private val nameTextView = itemView.name_of_recipe
         private val webView = itemView.web_view
@@ -59,34 +60,31 @@ class FavoritesAdapter(private val app: Application)
             val previewText = item.body
                     .split(" ")
                     .joinToString(limit = 50, separator = " ")
+                    .plus(" ...")
 
             RecipePresenter.loadWebView(webView, previewText)
 
             favoriteButton.isChecked = true
 
-            RxView.clicks(itemView)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        RecipePresenter.openActivity(app.applicationContext, item)
-                    }
+            itemView.setOnClickListener {
+                RecipePresenter.openDetailActivity(app.applicationContext, item)
+            }
 
-            RxView.clicks(itemView.favorite_button)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        RecipeEntry.changeFavorite(recipesDao, item)
-                        removedLastRecipe = item
-                        showSnackbar("${item.name} ${app.getString(R.string.undo_snackbar_favorite)}",
-                                Snackbar.LENGTH_LONG)
-                    }
+            itemView.favorite_button.setOnClickListener {
+                RecipeEntry.changeFavorite(recipesDao, item)
+                removedLastRecipe = item
+                showSnackbar("${item.name} ${app.getString(R.string.undo_snackbar_favorite)}",
+                        Snackbar.LENGTH_LONG)
+            }
         }
 
         private fun showSnackbar(message: String, length: Int) {
-            val snackbar = Snackbar.make(itemView.rootView.favorites_coordinator_layout, message, length)
-            snackbar.setAction(R.string.undo_string) {
-                restoreFavoriteRecipe()
+            Snackbar.make(itemView.rootView.favorites_coordinator_layout, message, length).apply {
+                setAction(R.string.undo_string) {
+                    restoreFavoriteRecipe()
+                }
+                show()
             }
-
-            snackbar.show()
         }
 
         private fun restoreFavoriteRecipe() {
@@ -96,7 +94,8 @@ class FavoritesAdapter(private val app: Application)
                         }
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe())
+                        .subscribe()
+                )
             }
         }
     }

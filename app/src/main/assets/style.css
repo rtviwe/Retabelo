@@ -10,7 +10,7 @@ td,
 th,
 span,
 div {
-	font: 13px "Arial", "Helvetica", sans-serif
+	font: 13px "Arial", "Helvetica", sans-serif;
 }
 
 .forstep img {
@@ -34,28 +34,11 @@ div {
 }
 
 .stepbystep p {
-	border-top: 1px dotted #deb887;
 	clear: both;
 	margin: 0 0 0 -10px;
 	padding: 10px 0 10px 10px;
 	width: 100%;
 	display: block
-}
-
-.cl {
-	clear: both
-}
-
-.cle {
-	clear: both;
-	height: 1px
-}
-
-.col {
-	float: left;
-	width: 50%;
-	display: block;
-	overflow: hidden
 }
 
 .h-recipe,

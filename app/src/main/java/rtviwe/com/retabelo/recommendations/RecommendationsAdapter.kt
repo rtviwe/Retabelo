@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.firebase.ui.firestore.paging.LoadingState
-import com.jakewharton.rxbinding2.view.RxView
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.recipe_item.view.*
 import kotlinx.android.synthetic.main.recommendations_fragment.*
 import rtviwe.com.retabelo.R
@@ -24,8 +22,7 @@ class RecommendationsAdapter(private val fragment: Fragment,
     : FirestorePagingAdapter<RecipeEntry, RecommendationsAdapter.RecommendationsViewHolder>(options) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendationsViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.recipe_item,
-                parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.recipe_item, parent, false)
 
         return RecommendationsViewHolder(view)
     }
@@ -46,8 +43,7 @@ class RecommendationsAdapter(private val fragment: Fragment,
 
     inner class RecommendationsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val recipesDatabase: RecipeDatabase = RecipeDatabase.getInstance(fragment.activity!!.application)
-        private val recipesDao: RecipeDao = recipesDatabase.recipeDao()
+        private val recipesDao: RecipeDao = RecipeDatabase.getInstance(fragment.activity!!.application).recipeDao()
 
         private val nameTextView = itemView.name_of_recipe
         private val webView = itemView.web_view
@@ -59,22 +55,19 @@ class RecommendationsAdapter(private val fragment: Fragment,
             val previewText = item.body
                     .split(" ")
                     .joinToString(limit = 50, separator = " ")
+                    .plus(" ...")
 
             RecipePresenter.loadWebView(webView, previewText)
 
             RecipeEntry.setIsFavorite(recipesDao, item.name, favoriteButton)
 
-            RxView.clicks(itemView)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        RecipePresenter.openActivity(fragment.context!!, item)
-                    }
+            itemView.setOnClickListener {
+                RecipePresenter.openDetailActivity(fragment.context!!, item)
+            }
 
-            RxView.clicks(itemView.favorite_button)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        RecipeEntry.changeFavorite(recipesDao, item)
-                    }
+            itemView.favorite_button.setOnClickListener {
+                RecipeEntry.changeFavorite(recipesDao, item)
+            }
         }
     }
 }

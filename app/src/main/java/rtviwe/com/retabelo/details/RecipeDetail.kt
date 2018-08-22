@@ -2,6 +2,7 @@ package rtviwe.com.retabelo.details
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.transaction
 import rtviwe.com.retabelo.R
 
 class RecipeDetail : AppCompatActivity() {
@@ -15,15 +16,13 @@ class RecipeDetail : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe_detail)
 
-        val fragment = RecipeDetailsFragment()
-        fragment.apply {
+        val fragment = RecipeDetailsFragment().apply {
             name = intent.getStringExtra("name")
             body = intent.getStringExtra("body")
         }
 
-        supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.recipe_container, fragment)
-                .commit()
+        supportFragmentManager.transaction(allowStateLoss = true) {
+            replace(R.id.recipe_container, fragment)
+        }
     }
 }

@@ -27,7 +27,7 @@
             android:textSize="24sp"
             android:typeface="sans"
             app:layout_constraintBottom_toTopOf="@+id/web_view"
-            app:layout_constraintEnd_toStartOf="@+id/favorite_button"
+            app:layout_constraintEnd_toStartOf="@+id/favorite_button_in_details"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

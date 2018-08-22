@@ -1,6 +1,5 @@
 package rtviwe.com.retabelo.foods
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,8 +7,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.jakewharton.rxbinding2.view.RxView
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.food_list_item.view.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.main.DiffCallback
@@ -26,7 +23,10 @@ class FoodsAdapter
     }
 
     override fun onBindViewHolder(holder: FoodViewHolder, position: Int) {
-        holder.bindTo(getItem(position)!!)
+        val item: FoodEntry? = getItem(position)
+        if (item != null) {
+            holder.bindTo(item)
+        }
     }
 
     inner class FoodViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -37,15 +37,8 @@ class FoodsAdapter
         lateinit var food: FoodEntry
 
         fun bindTo(food: FoodEntry) {
-            this.food = food
             nameTextView.text = food.name
             pictureImageView.setImageResource(R.drawable.ic_receipt_black_24dp)
-
-            RxView.clicks(itemView)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        Log.v("FoodViewHolder", food.toString())
-                    }
         }
     }
 }

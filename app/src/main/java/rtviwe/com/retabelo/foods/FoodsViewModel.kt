@@ -37,11 +37,10 @@ class FoodsViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun restoreFood(): Completable? {
-        if (removedLastFood != null) {
-            return Completable.fromAction {
+        return if (removedLastFood != null)
+            Completable.fromAction {
                 foodsDao.insertFood(removedLastFood!!)
             }
-        }
-        return null
+        else null
     }
 }
