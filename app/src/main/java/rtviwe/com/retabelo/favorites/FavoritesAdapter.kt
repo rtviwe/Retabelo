@@ -7,12 +7,9 @@ import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import io.reactivex.Completable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.favorites_fragment.view.*
 import kotlinx.android.synthetic.main.recipe_item.view.*
+import kotlinx.coroutines.experimental.launch
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.main.DiffCallback
 import rtviwe.com.retabelo.model.recipe.RecipeDao
@@ -23,8 +20,6 @@ import rtviwe.com.retabelo.model.recipe.RecipePresenter
 class FavoritesAdapter(private val app: Application)
     : PagedListAdapter<RecipeEntry, FavoritesAdapter.FavoriteViewHolder>(DiffCallback<RecipeEntry>()) {
 
-    private val disposableDatabase = CompositeDisposable()
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.recipe_item, parent, false)
@@ -34,14 +29,9 @@ class FavoritesAdapter(private val app: Application)
 
     override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
         val item: RecipeEntry? = getItem(position)
-        if (item != null) {
+        item?.let {
             holder.bindTo(item)
         }
-    }
-
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView)
-        disposableDatabase.clear()
     }
 
     inner class FavoriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -89,14 +79,10 @@ class FavoritesAdapter(private val app: Application)
         }
 
         private fun restoreFavoriteRecipe() {
-            if (removedLastRecipe != null) {
-                disposableDatabase.add(Completable.fromAction {
-                            RecipeEntry.changeFavorite(recipesDao, removedLastRecipe!!)
-                        }
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe()
-                )
+            removedLastRecipe?.let {
+                launch {
+                    RecipeEntry.changeFavorite(recipesDao, removedLastRecipe!!)
+                }
             }
         }
     }

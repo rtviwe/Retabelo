@@ -5,9 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.firebase.ui.firestore.paging.FirestorePagingAdapter
+import com.firebase.ui.firestore.paging.FirestorePagingOptions
+import com.firebase.ui.firestore.paging.LoadingState
+import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.android.synthetic.main.recipe_item.view.*
+import kotlinx.android.synthetic.main.recommendations_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.model.recipe.RecipeDao
 import rtviwe.com.retabelo.model.recipe.RecipeDatabase
@@ -16,8 +19,8 @@ import rtviwe.com.retabelo.model.recipe.RecipePresenter
 
 
 class RecommendationsAdapter(private val fragment: Fragment,
-                             options: FirestoreRecyclerOptions<RecipeEntry>)
-    : FirestoreRecyclerAdapter<RecipeEntry, RecommendationsAdapter.RecommendationsViewHolder>(options) {
+                             options: FirestorePagingOptions<RecipeEntry>)
+    : FirestorePagingAdapter<RecipeEntry, RecommendationsAdapter.RecommendationsViewHolder>(options) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendationsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.recipe_item, parent, false)
@@ -29,7 +32,7 @@ class RecommendationsAdapter(private val fragment: Fragment,
         holder.bindTo(model)
     }
 
-    /*override fun onLoadingStateChanged(state: LoadingState) {
+    override fun onLoadingStateChanged(state: LoadingState) {
         when (state) {
             LoadingState.LOADING_INITIAL -> fragment.progress_bar.visibility = View.VISIBLE
             LoadingState.LOADING_MORE -> fragment.progress_bar.visibility = View.GONE
@@ -37,7 +40,15 @@ class RecommendationsAdapter(private val fragment: Fragment,
             LoadingState.ERROR -> fragment.progress_bar.visibility = View.VISIBLE
             else -> fragment.progress_bar.visibility = View.GONE
         }
-    }*/
+    }
+
+    fun clearAdapter() {
+
+    }
+
+    fun addRecipes(recipes: List<DocumentSnapshot>) {
+
+    }
 
     inner class RecommendationsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -56,7 +67,6 @@ class RecommendationsAdapter(private val fragment: Fragment,
                     .plus(" ...")
 
             RecipePresenter.loadWebView(webView, previewText)
-
             RecipeEntry.setIsFavorite(recipesDao, item.name, favoriteButton)
 
             itemView.setOnClickListener {

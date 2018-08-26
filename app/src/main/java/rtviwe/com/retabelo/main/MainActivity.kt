@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setFragmentToContainer(fragment: MainBaseFragment?) {
-        if (fragment != null) {
+        fragment?.let {
             supportFragmentManager.transaction(allowStateLoss = true) {
                 replace(R.id.main_container, fragment)
             }

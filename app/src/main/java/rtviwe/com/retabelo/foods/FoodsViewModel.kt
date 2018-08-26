@@ -5,8 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.paging.PagedList
 import androidx.paging.RxPagedListBuilder
 import io.reactivex.BackpressureStrategy
-import io.reactivex.Completable
 import io.reactivex.Flowable
+import kotlinx.coroutines.experimental.launch
 import rtviwe.com.retabelo.model.food.FoodDao
 import rtviwe.com.retabelo.model.food.FoodDatabase
 import rtviwe.com.retabelo.model.food.FoodEntry
@@ -15,31 +15,38 @@ class FoodsViewModel(app: Application) : AndroidViewModel(app) {
 
     private val foodsDao: FoodDao = FoodDatabase.getInstance(app).foodDao()
 
-    private var removedLastFood: FoodEntry? = null
+    var removedLastFood: FoodEntry? = null
 
-    val foodsList: Flowable<PagedList<FoodEntry>> = RxPagedListBuilder(
+    private val foodsList: Flowable<PagedList<FoodEntry>> = RxPagedListBuilder(
             foodsDao.getAllFoods(),
             50
     ).buildFlowable(BackpressureStrategy.LATEST)
 
-    fun insertFood(foodEntry: FoodEntry): Completable {
-        return Completable.fromAction {
+    fun subscribeFoodsAdapter(adapter: FoodsAdapter) {
+        launch {
+            foodsList.subscribe(adapter::submitList)
+        }
+    }
+
+    fun insertFood(foodEntry: FoodEntry) {
+        launch {
             foodsDao.insertFood(foodEntry)
         }
     }
 
-    fun deleteFood(foodEntry: FoodEntry): Completable {
-        return Completable.fromAction {
+    fun deleteFood(foodEntry: FoodEntry) {
+        removedLastFood = foodEntry
+
+        launch {
             foodsDao.deleteFood(foodEntry)
-            removedLastFood = foodEntry
         }
     }
 
-    fun restoreFood(): Completable? {
-        return if (removedLastFood != null)
-            Completable.fromAction {
+    fun restoreFood() {
+        removedLastFood?.let {
+            launch {
                 foodsDao.insertFood(removedLastFood!!)
             }
-        else null
+        }
     }
 }

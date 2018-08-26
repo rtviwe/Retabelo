@@ -24,7 +24,7 @@ class FoodsAdapter
 
     override fun onBindViewHolder(holder: FoodViewHolder, position: Int) {
         val item: FoodEntry? = getItem(position)
-        if (item != null) {
+        item?.let {
             holder.bindTo(item)
         }
     }
@@ -34,9 +34,10 @@ class FoodsAdapter
         private var pictureImageView: ImageView = itemView.image_view_photo_food
         private var nameTextView: TextView = itemView.text_view_name
 
-        lateinit var food: FoodEntry
+        lateinit var foodEntry: FoodEntry
 
         fun bindTo(food: FoodEntry) {
+            foodEntry = food
             nameTextView.text = food.name
             pictureImageView.setImageResource(R.drawable.ic_receipt_black_24dp)
         }

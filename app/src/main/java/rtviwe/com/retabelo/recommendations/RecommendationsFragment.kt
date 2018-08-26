@@ -8,12 +8,12 @@ import android.view.ViewGroup
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.jakewharton.rxbinding2.widget.RxSearchView
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.recommendations_fragment.*
+import kotlinx.coroutines.experimental.launch
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.main.MainBaseFragment
 import rtviwe.com.retabelo.model.recipe.RecipeDao
@@ -52,6 +52,16 @@ class RecommendationsFragment : MainBaseFragment() {
         initSearchView()
     }
 
+    override fun onStart() {
+        super.onStart()
+        recommendationsAdapter.startListening()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        recommendationsAdapter.stopListening()
+    }
+
     override fun scrollToTop() {
         recommendationsLayoutManager.smoothScrollToPosition(recommendationsRecyclerView, RecyclerView.State(), 0)
     }
@@ -65,9 +75,9 @@ class RecommendationsFragment : MainBaseFragment() {
             setEnablePlaceholders(true)
         }.build()
 
-        val options = FirestoreRecyclerOptions.Builder<RecipeEntry>().apply {
+        val options = FirestorePagingOptions.Builder<RecipeEntry>().apply {
             setLifecycleOwner(this@RecommendationsFragment)
-            setQuery(queryForRecipes, RecipeEntry::class.java)
+            setQuery(queryForRecipes, config, RecipeEntry::class.java)
         }.build()
 
         recommendationsAdapter = RecommendationsAdapter(this, options)
@@ -89,38 +99,19 @@ class RecommendationsFragment : MainBaseFragment() {
                     !it.isEmpty()
                 }
                 .distinctUntilChanged()
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ searchText ->
-                    // clearAdapter()
+                    recommendationsAdapter.clearAdapter()
                     firebaseFirestore.collection("recipes")
                             .whereArrayContains("name", searchText)
                             .get()
                             .addOnCompleteListener {
-                                // recommendationsAdapter.addRecipes(it.result.documents)
+                                launch {
+                                    recommendationsAdapter.addRecipes(it.result.documents)
+                                }
                             }
                 }, {
                     Log.e("ERROR", "$it")
                     it.printStackTrace()
                 })
     }
-
-    // temp
-    /*private fun clearAdapter() {
-        val queryForRecipes = firebaseFirestore.collection("recipes")
-
-        val config = PagedList.Config.Builder().apply {
-            setPageSize(10)
-            setPrefetchDistance(250)
-            setEnablePlaceholders(true)
-        }.build()
-
-        val options = FirestorePagingOptions.Builder<RecipeEntry>().apply {
-            setLifecycleOwner(this@RecommendationsFragment)
-            setQuery(queryForRecipes, config, RecipeEntry::class.java)
-        }.build()
-
-        recommendationsAdapter = RecommendationsAdapter(this, options)
-
-        initRecyclerView()
-    }*/
 }

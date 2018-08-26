@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.favorites_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.main.MainBaseFragment
@@ -23,8 +22,6 @@ class FavoritesFragment : MainBaseFragment() {
     private lateinit var viewModel: FavoritesViewModel
     private lateinit var favoritesAdapter: FavoritesAdapter
     private lateinit var favoritesLayoutManager: LinearLayoutManager
-
-    private val disposablePaging = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(layoutId, container, false)
@@ -42,14 +39,7 @@ class FavoritesFragment : MainBaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        disposablePaging.add(
-                viewModel.recipesList.subscribe(favoritesAdapter::submitList)
-        )
-    }
-
-    override fun onStop() {
-        super.onStop()
-        disposablePaging.clear()
+        viewModel.subscribeFavoritesAdapter(favoritesAdapter)
     }
 
     override fun scrollToTop() {
@@ -64,6 +54,4 @@ class FavoritesFragment : MainBaseFragment() {
             adapter = favoritesAdapter
         }
     }
-
-
 }

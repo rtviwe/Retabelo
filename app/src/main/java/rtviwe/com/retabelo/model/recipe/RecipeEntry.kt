@@ -5,10 +5,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.google.firebase.firestore.IgnoreExtraProperties
-import io.reactivex.Completable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.experimental.launch
 import rtviwe.com.retabelo.model.Entry
 
 @IgnoreExtraProperties
@@ -26,28 +23,22 @@ data class RecipeEntry(
 
     companion object {
         fun changeFavorite(recipesDao: RecipeDao, item: RecipeEntry) {
-            CompositeDisposable().add(Completable.fromAction {
+            launch {
                 val isFavorite = recipesDao.isFavoriteByName(item.name)
                 if (!isFavorite) {
-                            item.isFavorite = true
-                            recipesDao.insertRecipe(item)
-                        } else {
-                            item.isFavorite = false
-                            recipesDao.deleteRecipeByName(item.name)
-                        }
-                    }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe())
+                    item.isFavorite = true
+                    recipesDao.insertRecipe(item)
+                } else {
+                    item.isFavorite = false
+                    recipesDao.deleteRecipeByName(item.name)
+                }
+            }
         }
 
-        fun setIsFavorite(recipesDao: RecipeDao, name: String, icon: CheckBox): Boolean {
-            return CompositeDisposable().add(Completable.fromAction {
-                        icon.isChecked = recipesDao.findRecipeByName(name) != null
-                    }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe())
+        fun setIsFavorite(recipesDao: RecipeDao, name: String, icon: CheckBox) {
+            launch {
+                icon.isChecked = recipesDao.findRecipeByName(name) != null
+            }
         }
     }
 }

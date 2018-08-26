@@ -14,27 +14,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.support.design.widget.RxFloatingActionButton
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.foods_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.main.MainBaseFragment
+import rtviwe.com.retabelo.model.food.FoodDao
+import rtviwe.com.retabelo.model.food.FoodDatabase
 
 
 class FoodsFragment : MainBaseFragment() {
 
     override val layoutId = R.layout.foods_fragment
 
+    private lateinit var foodDao: FoodDao
     private lateinit var foodsAdapter: FoodsAdapter
     private lateinit var viewModel: FoodsViewModel
     private lateinit var foodsLayoutManager: LinearLayoutManager
 
-    private val disposablePaging = CompositeDisposable()
-    private val disposableDatabase = CompositeDisposable()
     private var deletedFoodName = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        foodDao = FoodDatabase.getInstance(context!!).foodDao()
         foodsAdapter = FoodsAdapter()
         viewModel = ViewModelProviders.of(this).get(FoodsViewModel::class.java)
 
@@ -52,15 +51,8 @@ class FoodsFragment : MainBaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        disposablePaging.add(
-                viewModel.foodsList.subscribe(foodsAdapter::submitList)
-        )
-    }
 
-    override fun onStop() {
-        super.onStop()
-        disposablePaging.clear()
-        disposableDatabase.clear()
+        viewModel.subscribeFoodsAdapter(foodsAdapter)
     }
 
     override fun scrollToTop() {
@@ -99,13 +91,9 @@ class FoodsFragment : MainBaseFragment() {
                                 target: RecyclerView.ViewHolder) = false
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                val selectedFood = (viewHolder as FoodsAdapter.FoodViewHolder).food
+                val selectedFood = (viewHolder as FoodsAdapter.FoodViewHolder).foodEntry
                 deletedFoodName = selectedFood.name
-
-                disposableDatabase.add(viewModel.deleteFood(selectedFood)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe())
+                viewModel.deleteFood(selectedFood)
 
                 showSnackbar("$deletedFoodName ${getString(R.string.undo_snackbar_food)}", Snackbar.LENGTH_LONG)
             }
@@ -114,10 +102,7 @@ class FoodsFragment : MainBaseFragment() {
 
     private fun showSnackbar(message: String, length: Int) {
         Snackbar.make(foods_coordinator_layout, message, length).setAction(R.string.undo_string) {
-            disposableDatabase.add(viewModel.restoreFood()!!
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe())
+            viewModel.restoreFood()
         }.show()
     }
 
