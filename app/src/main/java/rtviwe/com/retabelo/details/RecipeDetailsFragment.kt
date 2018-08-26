@@ -36,10 +36,10 @@ class RecipeDetailsFragment : Fragment() {
         name_of_recipe.text = name
 
         RecipePresenter.loadWebView(web_view, body)
-        RecipeEntry.setIsFavorite(recipesDao, name, favorite_button_in_details)
+        RecipeEntry.setIconAndItemFavorite(recipesDao, name, favorite_button_in_details)
 
         favorite_button_in_details.setOnClickListener {
-            recipeDetailViewModel.changeFavorite(name)
+            recipeDetailViewModel.changeFavorite(name, body)
         }
     }
 }

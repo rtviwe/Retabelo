@@ -55,6 +55,7 @@ class RecommendationsFragment : MainBaseFragment() {
     override fun onStart() {
         super.onStart()
         recommendationsAdapter.startListening()
+        recommendationsAdapter.notifyDataSetChanged()
     }
 
     override fun onStop() {

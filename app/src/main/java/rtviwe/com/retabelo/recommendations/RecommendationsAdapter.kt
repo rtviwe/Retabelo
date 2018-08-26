@@ -67,7 +67,7 @@ class RecommendationsAdapter(private val fragment: Fragment,
                     .plus(" ...")
 
             RecipePresenter.loadWebView(webView, previewText)
-            RecipeEntry.setIsFavorite(recipesDao, item.name, favoriteButton)
+            RecipeEntry.setIconAndItemFavorite(recipesDao, item.name, favoriteButton)
 
             itemView.setOnClickListener {
                 RecipePresenter.openDetailActivity(fragment.context!!, item)

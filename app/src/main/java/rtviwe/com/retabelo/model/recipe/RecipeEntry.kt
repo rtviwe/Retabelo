@@ -35,7 +35,7 @@ data class RecipeEntry(
             }
         }
 
-        fun setIsFavorite(recipesDao: RecipeDao, name: String, icon: CheckBox) {
+        fun setIconAndItemFavorite(recipesDao: RecipeDao, name: String, icon: CheckBox) {
             launch {
                 icon.isChecked = recipesDao.findRecipeByName(name) != null
             }

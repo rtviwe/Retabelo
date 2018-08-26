@@ -10,11 +10,15 @@ class RecipeDetailViewModel(app: Application) : AndroidViewModel(app) {
 
     private val recipesDao = RecipeDatabase.getInstance(app).recipeDao()
 
-    fun changeFavorite(name: String) {
+    fun changeFavorite(name: String, body: String) {
         launch {
             val item = recipesDao.findRecipeByName(name)
-            item?.let {
-                RecipeEntry.changeFavorite(recipesDao, it)
+
+            if (item == null) {
+                val newItem = RecipeEntry(0, name, body, true)
+                recipesDao.insertRecipe(newItem)
+            } else {
+                RecipeEntry.changeFavorite(recipesDao, item)
             }
         }
     }
