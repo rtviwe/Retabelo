@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.firestore.paging.FirestorePagingOptions
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.jakewharton.rxbinding2.widget.RxSearchView
@@ -65,9 +65,9 @@ class RecommendationsFragment : MainBaseFragment() {
             setEnablePlaceholders(true)
         }.build()
 
-        val options = FirestorePagingOptions.Builder<RecipeEntry>().apply {
+        val options = FirestoreRecyclerOptions.Builder<RecipeEntry>().apply {
             setLifecycleOwner(this@RecommendationsFragment)
-            setQuery(queryForRecipes, config, RecipeEntry::class.java)
+            setQuery(queryForRecipes, RecipeEntry::class.java)
         }.build()
 
         recommendationsAdapter = RecommendationsAdapter(this, options)
@@ -91,7 +91,7 @@ class RecommendationsFragment : MainBaseFragment() {
                 .distinctUntilChanged()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ searchText ->
-                    clearAdapter()
+                    // clearAdapter()
                     firebaseFirestore.collection("recipes")
                             .whereArrayContains("name", searchText)
                             .get()
@@ -105,7 +105,7 @@ class RecommendationsFragment : MainBaseFragment() {
     }
 
     // temp
-    private fun clearAdapter() {
+    /*private fun clearAdapter() {
         val queryForRecipes = firebaseFirestore.collection("recipes")
 
         val config = PagedList.Config.Builder().apply {
@@ -122,5 +122,5 @@ class RecommendationsFragment : MainBaseFragment() {
         recommendationsAdapter = RecommendationsAdapter(this, options)
 
         initRecyclerView()
-    }
+    }*/
 }
