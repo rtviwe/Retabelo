@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.transaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.FirebaseApp
 import com.jakewharton.rxbinding2.support.design.widget.RxBottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import rtviwe.com.retabelo.R
@@ -22,6 +23,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        FirebaseApp.initializeApp(this)
 
         RxBottomNavigationView.itemSelections(bottom_navigation as BottomNavigationView).subscribe {
             currentFragmentId = it.itemId

@@ -13,4 +13,5 @@
     <string name="product_hint">Продукт</string>
     <string name="selected_food_type">Выбранный тип</string>
     <string name="add_new_food">Добавить</string>
+    <string name="search_hint">Найти рецепт</string>
 </resources>

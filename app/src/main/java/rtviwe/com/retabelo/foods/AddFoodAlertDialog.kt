@@ -42,9 +42,9 @@ class AddFoodAlertDialog : DialogFragment() {
             setCancelable(true)
             setPositiveButton(getString(R.string.button_add)) { _, _ ->
                 val name = view.new_food_edit_text.text
-                foodsViewModel.insertFood(FoodEntry(0, name.toString(), FoodType.ANY))
+                foodsViewModel.insertFood(FoodEntry(0, name.toString(), FoodType.OTHER))
 
-                disposableDatabase.add(foodsViewModel.insertFood(FoodEntry(0, name.toString(), FoodType.ANY))
+                disposableDatabase.add(foodsViewModel.insertFood(FoodEntry(0, name.toString(), FoodType.OTHER))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe())

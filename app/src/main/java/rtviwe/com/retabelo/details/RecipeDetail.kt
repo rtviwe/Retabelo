@@ -17,8 +17,8 @@ class RecipeDetail : AppCompatActivity() {
         setContentView(R.layout.activity_recipe_detail)
 
         val fragment = RecipeDetailsFragment().apply {
-            name = intent.getStringExtra("name")
-            body = intent.getStringExtra("body")
+            name = intent.getStringExtra(EXTRA_NAME)
+            body = intent.getStringExtra(EXTRA_BODY)
         }
 
         supportFragmentManager.transaction(allowStateLoss = true) {

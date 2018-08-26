@@ -78,6 +78,7 @@ class FavoritesAdapter(private val app: Application)
             }
         }
 
+
         private fun showSnackbar(message: String, length: Int) {
             Snackbar.make(itemView.rootView.favorites_coordinator_layout, message, length).apply {
                 setAction(R.string.undo_string) {

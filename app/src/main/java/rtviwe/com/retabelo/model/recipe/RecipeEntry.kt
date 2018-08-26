@@ -27,8 +27,8 @@ data class RecipeEntry(
     companion object {
         fun changeFavorite(recipesDao: RecipeDao, item: RecipeEntry) {
             CompositeDisposable().add(Completable.fromAction {
-                        val searchedRecipe: RecipeEntry? = recipesDao.findRecipeByName(item.name)
-                        if (searchedRecipe == null || !searchedRecipe.isFavorite) {
+                val isFavorite = recipesDao.isFavoriteByName(item.name)
+                if (!isFavorite) {
                             item.isFavorite = true
                             recipesDao.insertRecipe(item)
                         } else {

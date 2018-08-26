@@ -13,8 +13,7 @@ import rtviwe.com.retabelo.model.food.FoodEntry
 
 class FoodsViewModel(app: Application) : AndroidViewModel(app) {
 
-    private val foodDatabase: FoodDatabase = FoodDatabase.getInstance(getApplication())
-    private val foodsDao: FoodDao = foodDatabase.foodDao()
+    private val foodsDao: FoodDao = FoodDatabase.getInstance(app).foodDao()
 
     private var removedLastFood: FoodEntry? = null
 

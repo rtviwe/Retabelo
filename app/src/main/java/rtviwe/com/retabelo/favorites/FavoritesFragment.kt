@@ -11,6 +11,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.favorites_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.main.MainBaseFragment
+import rtviwe.com.retabelo.model.recipe.RecipeDao
 import rtviwe.com.retabelo.model.recipe.RecipeDatabase
 
 
@@ -18,9 +19,9 @@ class FavoritesFragment : MainBaseFragment() {
 
     override val layoutId = R.layout.favorites_fragment
 
-    private lateinit var recipesDatabase: RecipeDatabase
-    private lateinit var favoritesAdapter: FavoritesAdapter
+    private lateinit var recipesDao: RecipeDao
     private lateinit var viewModel: FavoritesViewModel
+    private lateinit var favoritesAdapter: FavoritesAdapter
     private lateinit var favoritesLayoutManager: LinearLayoutManager
 
     private val disposablePaging = CompositeDisposable()
@@ -32,7 +33,7 @@ class FavoritesFragment : MainBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recipesDatabase = RecipeDatabase.getInstance(activity!!.applicationContext)
+        recipesDao = RecipeDatabase.getInstance(context!!).recipeDao()
         favoritesAdapter = FavoritesAdapter(activity!!.application)
         viewModel = ViewModelProviders.of(this).get(FavoritesViewModel::class.java)
 
@@ -63,4 +64,6 @@ class FavoritesFragment : MainBaseFragment() {
             adapter = favoritesAdapter
         }
     }
+
+
 }

@@ -1,7 +1,7 @@
 package rtviwe.com.retabelo.model.food
 
 enum class FoodType {
-    ANY,
+    OTHER,
     LIQUID,
     BREAD,
     ALCOHOL,

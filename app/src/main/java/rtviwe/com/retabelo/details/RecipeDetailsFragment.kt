@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import io.reactivex.Completable
+import androidx.lifecycle.ViewModelProviders
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -22,12 +22,14 @@ class RecipeDetailsFragment : Fragment() {
     private val disposableFavorite = CompositeDisposable()
 
     private lateinit var recipesDao: RecipeDao
+    private lateinit var recipeDetailViewModel: RecipeDetailViewModel
 
     lateinit var name: String
     lateinit var body: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         recipesDao = RecipeDatabase.getInstance(activity!!.application).recipeDao()
+        recipeDetailViewModel = ViewModelProviders.of(this).get(RecipeDetailViewModel::class.java)
 
         return inflater.inflate(layoutId, container, false)
     }
@@ -42,12 +44,7 @@ class RecipeDetailsFragment : Fragment() {
         RecipeEntry.setIsFavorite(recipesDao, name, favorite_button_in_details)
 
         favorite_button_in_details.setOnClickListener {
-            disposableFavorite.add(Completable.fromAction {
-                val item = recipesDao.findRecipeByName(name)
-                if (item != null) {
-                    RecipeEntry.changeFavorite(recipesDao, item)
-                }
-            }
+            disposableFavorite.add(recipeDetailViewModel.changeFavorite(name)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe()
@@ -55,8 +52,8 @@ class RecipeDetailsFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         disposableFavorite.clear()
     }
 }

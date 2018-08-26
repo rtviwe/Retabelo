@@ -20,14 +20,12 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.foods_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.main.MainBaseFragment
-import rtviwe.com.retabelo.model.food.FoodDatabase
 
 
 class FoodsFragment : MainBaseFragment() {
 
     override val layoutId = R.layout.foods_fragment
 
-    private lateinit var foodsDatabase: FoodDatabase
     private lateinit var foodsAdapter: FoodsAdapter
     private lateinit var viewModel: FoodsViewModel
     private lateinit var foodsLayoutManager: LinearLayoutManager
@@ -37,16 +35,15 @@ class FoodsFragment : MainBaseFragment() {
     private var deletedFoodName = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        foodsAdapter = FoodsAdapter()
+        viewModel = ViewModelProviders.of(this).get(FoodsViewModel::class.java)
+
         return inflater.inflate(layoutId, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fab.startAnimation(AnimationUtils.loadAnimation(activity?.applicationContext, R.anim.scale_fab_in))
-
-        foodsDatabase = FoodDatabase.getInstance(activity!!.applicationContext)
-        foodsAdapter = FoodsAdapter()
-        viewModel = ViewModelProviders.of(this).get(FoodsViewModel::class.java)
 
         initRecyclerView()
         initSwipes()

@@ -1,6 +1,7 @@
 package rtviwe.com.retabelo.recommendations
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,19 +10,25 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.favorites_fragment.*
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.jakewharton.rxbinding2.widget.RxSearchView
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.recommendations_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.main.MainBaseFragment
+import rtviwe.com.retabelo.model.recipe.RecipeDao
+import rtviwe.com.retabelo.model.recipe.RecipeDatabase
 import rtviwe.com.retabelo.model.recipe.RecipeEntry
+import java.util.concurrent.TimeUnit
 
 
 class RecommendationsFragment : MainBaseFragment() {
 
     override val layoutId = R.layout.recommendations_fragment
 
-    private val firebaseFirestore = FirebaseFirestore.getInstance()
+    private lateinit var firebaseFirestore: FirebaseFirestore
 
+    private lateinit var recipesDao: RecipeDao
     private lateinit var recommendationsAdapter: RecommendationsAdapter
     private lateinit var recommendationsRecyclerView: RecyclerView
     private lateinit var recommendationsLayoutManager: LinearLayoutManager
@@ -33,12 +40,20 @@ class RecommendationsFragment : MainBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        firebaseFirestore = FirebaseFirestore.getInstance()
+        firebaseFirestore.firestoreSettings = FirebaseFirestoreSettings.Builder().apply {
+            setTimestampsInSnapshotsEnabled(true)
+        }.build()
+
+        recipesDao = RecipeDatabase.getInstance(context!!).recipeDao()
+
         initAdapter()
         initRecyclerView()
+        initSearchView()
     }
 
     override fun scrollToTop() {
-        recommendationsLayoutManager.smoothScrollToPosition(recycler_view_favorites, RecyclerView.State(), 0)
+        recommendationsLayoutManager.smoothScrollToPosition(recommendationsRecyclerView, RecyclerView.State(), 0)
     }
 
     private fun initAdapter() {
@@ -47,7 +62,6 @@ class RecommendationsFragment : MainBaseFragment() {
         val config = PagedList.Config.Builder().apply {
             setPageSize(10)
             setPrefetchDistance(250)
-            setInitialLoadSizeHint(10)
             setEnablePlaceholders(true)
         }.build()
 
@@ -66,5 +80,47 @@ class RecommendationsFragment : MainBaseFragment() {
             layoutManager = recommendationsLayoutManager
             adapter = recommendationsAdapter
         }
+    }
+
+    private fun initSearchView() {
+        RxSearchView.queryTextChanges(search_view)
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .filter {
+                    !it.isEmpty()
+                }
+                .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ searchText ->
+                    clearAdapter()
+                    firebaseFirestore.collection("recipes")
+                            .whereArrayContains("name", searchText)
+                            .get()
+                            .addOnCompleteListener {
+                                // recommendationsAdapter.addRecipes(it.result.documents)
+                            }
+                }, {
+                    Log.e("ERROR", "$it")
+                    it.printStackTrace()
+                })
+    }
+
+    // temp
+    private fun clearAdapter() {
+        val queryForRecipes = firebaseFirestore.collection("recipes")
+
+        val config = PagedList.Config.Builder().apply {
+            setPageSize(10)
+            setPrefetchDistance(250)
+            setEnablePlaceholders(true)
+        }.build()
+
+        val options = FirestorePagingOptions.Builder<RecipeEntry>().apply {
+            setLifecycleOwner(this@RecommendationsFragment)
+            setQuery(queryForRecipes, config, RecipeEntry::class.java)
+        }.build()
+
+        recommendationsAdapter = RecommendationsAdapter(this, options)
+
+        initRecyclerView()
     }
 }

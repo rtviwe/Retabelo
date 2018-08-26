@@ -12,4 +12,5 @@
     <string name="product_hint">Product</string>
     <string name="selected_food_type">Selected food type</string>
     <string name="add_new_food">Add</string>
+    <string name="search_hint">Find recipe</string>
 </resources>
