@@ -49,6 +49,7 @@ class RecommendationsFragment : MainBaseFragment() {
         initAdapter()
         initRecyclerView()
         initSearchView()
+        initSwipeRefreshLayout()
     }
 
     override fun onStart() {
@@ -111,5 +112,17 @@ class RecommendationsFragment : MainBaseFragment() {
                 }, {
                     it.printStackTrace()
                 })
+    }
+
+    private fun initSwipeRefreshLayout() {
+        swipe_refresh.setOnRefreshListener {
+            refreshViews()
+        }
+    }
+
+    private fun refreshViews() {
+        initAdapter()
+        recommendationsAdapter.isLoadingFromSwipe = true
+        initRecyclerView()
     }
 }

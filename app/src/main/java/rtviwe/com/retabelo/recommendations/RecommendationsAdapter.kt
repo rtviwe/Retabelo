@@ -22,6 +22,8 @@ class RecommendationsAdapter(private val fragment: Fragment,
                              options: FirestorePagingOptions<RecipeEntry>)
     : FirestorePagingAdapter<RecipeEntry, RecommendationsAdapter.RecommendationsViewHolder>(options) {
 
+    var isLoadingFromSwipe = false
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendationsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.recipe_item, parent, false)
 
@@ -34,9 +36,15 @@ class RecommendationsAdapter(private val fragment: Fragment,
 
     override fun onLoadingStateChanged(state: LoadingState) {
         when (state) {
-            LoadingState.LOADING_INITIAL -> fragment.progress_bar.visibility = View.VISIBLE
+            LoadingState.LOADING_INITIAL -> {
+                if (isLoadingFromSwipe) fragment.swipe_refresh.isRefreshing = true
+                else fragment.progress_bar.visibility = View.VISIBLE
+            }
             LoadingState.LOADING_MORE -> fragment.progress_bar.visibility = View.GONE
-            LoadingState.LOADED -> fragment.progress_bar.visibility = View.GONE
+            LoadingState.LOADED -> {
+                fragment.progress_bar.visibility = View.GONE
+                fragment.swipe_refresh.isRefreshing = false
+            }
             LoadingState.ERROR -> fragment.progress_bar.visibility = View.VISIBLE
             else -> fragment.progress_bar.visibility = View.GONE
         }
