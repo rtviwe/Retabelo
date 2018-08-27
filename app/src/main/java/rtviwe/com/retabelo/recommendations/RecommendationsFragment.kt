@@ -32,6 +32,8 @@ class RecommendationsFragment : MainBaseFragment() {
     private lateinit var recommendationsRecyclerView: RecyclerView
     private lateinit var recommendationsLayoutManager: LinearLayoutManager
 
+    var clickedItemPosition = 0
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(layoutId, container, false)
     }
@@ -60,6 +62,11 @@ class RecommendationsFragment : MainBaseFragment() {
     override fun onStop() {
         super.onStop()
         recommendationsAdapter.stopListening()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        recommendationsAdapter.notifyItemChanged(clickedItemPosition)
     }
 
     override fun scrollToTop() {

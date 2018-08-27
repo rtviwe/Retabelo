@@ -3,7 +3,6 @@ package rtviwe.com.retabelo.recommendations
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
@@ -18,7 +17,7 @@ import rtviwe.com.retabelo.model.recipe.RecipeEntry
 import rtviwe.com.retabelo.model.recipe.RecipePresenter
 
 
-class RecommendationsAdapter(private val fragment: Fragment,
+class RecommendationsAdapter(private val fragment: RecommendationsFragment,
                              options: FirestorePagingOptions<RecipeEntry>)
     : FirestorePagingAdapter<RecipeEntry, RecommendationsAdapter.RecommendationsViewHolder>(options) {
 
@@ -78,6 +77,7 @@ class RecommendationsAdapter(private val fragment: Fragment,
             RecipeEntry.setIconAndItemFavorite(recipesDao, item.name, favoriteButton)
 
             itemView.setOnClickListener {
+                fragment.clickedItemPosition = adapterPosition
                 RecipePresenter.openDetailActivity(fragment.context!!, item)
             }
 
