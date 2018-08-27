@@ -1,7 +1,6 @@
 package rtviwe.com.retabelo.recommendations
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,7 +54,6 @@ class RecommendationsFragment : MainBaseFragment() {
     override fun onStart() {
         super.onStart()
         recommendationsAdapter.startListening()
-        recommendationsAdapter.notifyDataSetChanged()
     }
 
     override fun onStop() {
@@ -72,7 +70,7 @@ class RecommendationsFragment : MainBaseFragment() {
 
         val config = PagedList.Config.Builder().apply {
             setPageSize(10)
-            setPrefetchDistance(250)
+            setPrefetchDistance(480)
             setEnablePlaceholders(true)
         }.build()
 
@@ -111,7 +109,6 @@ class RecommendationsFragment : MainBaseFragment() {
                                 }
                             }
                 }, {
-                    Log.e("ERROR", "$it")
                     it.printStackTrace()
                 })
     }

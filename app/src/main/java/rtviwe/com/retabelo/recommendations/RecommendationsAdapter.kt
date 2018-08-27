@@ -59,7 +59,7 @@ class RecommendationsAdapter(private val fragment: Fragment,
         private val favoriteButton = itemView.favorite_button
 
         fun bindTo(item: RecipeEntry) {
-            nameTextView.text = item.name
+            nameTextView.text = if (item.name.count() <= 20) item.name else item.name.take(20).plus("...")
 
             val previewText = item.body
                     .split(" ")
