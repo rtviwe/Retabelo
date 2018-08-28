@@ -1,13 +1,13 @@
 package rtviwe.com.retabelo.recommendations
 
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.firebase.ui.firestore.paging.LoadingState
-import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.android.synthetic.main.recipe_item.view.*
 import kotlinx.android.synthetic.main.recommendations_fragment.*
 import rtviwe.com.retabelo.R
@@ -49,14 +49,6 @@ class RecommendationsAdapter(private val fragment: RecommendationsFragment,
         }
     }
 
-    fun clearAdapter() {
-
-    }
-
-    fun addRecipes(recipes: List<DocumentSnapshot>) {
-
-    }
-
     inner class RecommendationsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val recipesDao: RecipeDao = RecipeDatabase.getInstance(fragment.activity!!.application).recipeDao()
@@ -79,6 +71,14 @@ class RecommendationsAdapter(private val fragment: RecommendationsFragment,
             itemView.setOnClickListener {
                 fragment.clickedItemPosition = adapterPosition
                 RecipePresenter.openDetailActivity(fragment.context!!, item)
+            }
+
+            itemView.web_view.setOnTouchListener { _, event ->
+                if (event.action == MotionEvent.ACTION_UP) {
+                    fragment.clickedItemPosition = adapterPosition
+                    RecipePresenter.openDetailActivity(fragment.context!!, item)
+                }
+                true
             }
 
             itemView.favorite_button.setOnClickListener {

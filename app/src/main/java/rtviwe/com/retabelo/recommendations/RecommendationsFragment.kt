@@ -10,9 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.Source
 import com.jakewharton.rxbinding2.widget.RxSearchView
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.recommendations_fragment.*
-import kotlinx.coroutines.experimental.launch
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.main.MainBaseFragment
 import rtviwe.com.retabelo.model.recipe.RecipeDao
@@ -48,7 +50,7 @@ class RecommendationsFragment : MainBaseFragment() {
 
         recipesDao = RecipeDatabase.getInstance(context!!).recipeDao()
 
-        initAdapter()
+        initAdapter(firebaseFirestore.collection("recipes").limit(10))
         initRecyclerView()
         initSearchView()
         initSwipeRefreshLayout()
@@ -73,18 +75,17 @@ class RecommendationsFragment : MainBaseFragment() {
         recommendationsLayoutManager.smoothScrollToPosition(recommendationsRecyclerView, RecyclerView.State(), 0)
     }
 
-    private fun initAdapter() {
-        val queryForRecipes = firebaseFirestore.collection("recipes")
-
+    private fun initAdapter(query: Query) {
         val config = PagedList.Config.Builder().apply {
             setPageSize(10)
-            setPrefetchDistance(480)
+            setPrefetchDistance(20)
+            setInitialLoadSizeHint(480)
             setEnablePlaceholders(true)
         }.build()
 
         val options = FirestorePagingOptions.Builder<RecipeEntry>().apply {
             setLifecycleOwner(this@RecommendationsFragment)
-            setQuery(queryForRecipes, config, RecipeEntry::class.java)
+            setQuery(query, Source.DEFAULT, config, RecipeEntry::class.java)
         }.build()
 
         recommendationsAdapter = RecommendationsAdapter(this, options)
@@ -106,30 +107,42 @@ class RecommendationsFragment : MainBaseFragment() {
                     !it.isEmpty()
                 }
                 .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe({ searchText ->
-                    recommendationsAdapter.clearAdapter()
-                    firebaseFirestore.collection("recipes")
-                            .whereArrayContains("name", searchText)
-                            .get()
-                            .addOnCompleteListener {
-                                launch {
-                                    recommendationsAdapter.addRecipes(it.result.documents)
-                                }
-                            }
+                    clearAdapter()
+                    addRecipes(searchText.toString())
                 }, {
                     it.printStackTrace()
                 })
+
+        search_view.setOnCloseListener {
+            refreshAdapter()
+            false
+        }
     }
 
     private fun initSwipeRefreshLayout() {
         swipe_refresh.setOnRefreshListener {
-            refreshViews()
+            refreshAdapter()
         }
     }
 
-    private fun refreshViews() {
-        initAdapter()
+    private fun refreshAdapter() {
+        initAdapter(firebaseFirestore.collection("recipes"))
         recommendationsAdapter.isLoadingFromSwipe = true
+        initRecyclerView()
+    }
+
+    private fun clearAdapter() {
+        initAdapter(firebaseFirestore.collection("empty"))
+        recommendationsAdapter.isLoadingFromSwipe = false
+        initRecyclerView()
+    }
+
+    private fun addRecipes(searchText: String) {
+        initAdapter(firebaseFirestore.collection("recipes"))
+        recommendationsAdapter.isLoadingFromSwipe = false
         initRecyclerView()
     }
 }
