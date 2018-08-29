@@ -2,12 +2,12 @@ body {
 	margin: 0;
 	padding: 0;
 	background: #ffffff;
-	font: 12px Arial, sans-serif;
+	font: 12px "Google Sans";
 }
 
 @font-face {
-    font-family: "Noto Sans";
-    src: url("./NotoSans-Regular.ttf");
+    font-family: "Google Sans";
+    src: url("./GoogleSans-Regular.ttf");
     font-style: normal
 }
 
@@ -16,7 +16,7 @@ td,
 th,
 span,
 div {
-	font: 13px "Noto Sans", "Helvetica", sans-serif;
+	font: 13px "Google Sans";
 }
 
 .forstep img {
@@ -53,7 +53,7 @@ div {
 .p-summary,
 .h-recipe span,
 .h-recipe p {
-	font: 14px/1.6 "Noto Sans", "Lucida Grande", sans-serif
+	font: 14px/1.6 "Google Sans"
 }
 
 .p-summary {
