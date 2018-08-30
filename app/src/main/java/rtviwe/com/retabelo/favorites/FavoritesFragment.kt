@@ -31,7 +31,7 @@ class FavoritesFragment : MainBaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recipesDao = RecipeDatabase.getInstance(context!!).recipeDao()
-        favoritesAdapter = FavoritesAdapter(activity!!.application)
+        favoritesAdapter = FavoritesAdapter(this)
         viewModel = ViewModelProviders.of(this).get(FavoritesViewModel::class.java)
 
         initRecyclerView()

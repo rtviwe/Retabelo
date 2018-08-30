@@ -20,8 +20,8 @@ class RecipeDetailsFragment : Fragment() {
     private lateinit var recipesDao: RecipeDao
     private lateinit var recipeDetailViewModel: RecipeDetailViewModel
 
-    lateinit var name: String
-    lateinit var body: String
+    var name = ""
+    var body = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         recipesDao = RecipeDatabase.getInstance(activity!!.application).recipeDao()
@@ -42,4 +42,6 @@ class RecipeDetailsFragment : Fragment() {
             recipeDetailViewModel.changeFavorite(name, body)
         }
     }
+
+
 }
