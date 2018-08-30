@@ -141,7 +141,7 @@ class RecommendationsFragment : MainBaseFragment() {
     }
 
     private fun addRecipes(searchText: String) {
-        initAdapter(firebaseFirestore.collection("recipes"))
+        initAdapter(firebaseFirestore.collection("recipes").whereEqualTo("name", searchText))
         recommendationsAdapter.isLoadingFromSwipe = false
         initRecyclerView()
     }
