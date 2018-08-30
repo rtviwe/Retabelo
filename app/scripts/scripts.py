@@ -22,7 +22,7 @@ def download_html(url) -> BeautifulSoup:
 # get links
 def script1():
     url = f"{BASE_URL}/linkz_start-1.html"
-    for i in range(1, 50):
+    for i in range(1, 51):
         soup = download_html(url)
         div = soup.find('div', class_='lst')
         refs = div.find_all('a')
@@ -74,10 +74,11 @@ def script2():
         time.sleep(1)
 
 
-# fixing line
 def fix_line(line) -> str:
-    line = line.replace('src="//', 'src="https://').replace('h6', 'p').replace('h5', 'p').replace('h4', 'p')\
-        .replace('h3', 'p').replace('h2', 'p').replace('h1', 'p').replace('<a', '<p').replace('</a', '</p')
+    line = line.replace('src="//', 'src="https://').replace('<h6', '<p').replace('<h5', '<p').replace('<h4', '<p') \
+        .replace('<h3', '<p').replace('<h2', '<p').replace('<h1', '<p').replace('</h6', '</p').replace('</h5', '</p') \
+        .replace('</h4', '</p').replace('</h3', '</p').replace('</h2', '</p').replace('</h1', '</p') \
+        .replace('<a', '<p').replace('</a', '</p').replace('<p><b>Приятного аппетита!</b></p>', '')
     return line
 
 
@@ -94,11 +95,12 @@ def script3():
     lines = open(CONTENT_FILE, 'r', encoding='utf-8').readlines()
     i = 0
     for line in lines:
-        if prev_line_is_end:
-            name = line
-            prev_line_is_end = False
+        if not prev_line_is_end and line != '--end--\n':
+            body += line
 
-        body += line
+        if prev_line_is_end:
+            name = line.strip()
+            prev_line_is_end = False
 
         if line == '--end--\n':
             i += 1
@@ -109,7 +111,6 @@ def script3():
                 u'body': body
             })
 
-            head = ""
             body = ""
             prev_line_is_end = True
 
@@ -135,7 +136,7 @@ def delete_collection(coll_ref, batch_size):
         return delete_collection(coll_ref, batch_size)
 
 
-# edit firestore
+# edit firestore (4 - 100)
 def script5():
     cred = credentials.Certificate('retabelo-a2065-firebase-adminsdk-qu4g4-bcbe24f1c7.json')
     firebase_admin.initialize_app(cred)
@@ -143,10 +144,10 @@ def script5():
     collection_ref = db.collection(u'recipes')
     docs = collection_ref.get()
 
-    for doc in docs:
-        name = doc.to_dict()['name']
-        body = doc.to_dict()['body'].replace('--end--', '').replace(name, '', 1)
-        print(body)
+    for i, doc in enumerate(docs):
+        name = doc.to_dict()['name'].strip()
+        body = doc.to_dict()['body'].replace('--end--', '').replace('<p><b>Приятного аппетита!</b></p>', '')
+
         doc.reference.set({
             u'name': name,
             u'body': body
@@ -154,9 +155,9 @@ def script5():
 
 
 if __name__ == '__main__':
-    script1()
-    script2()
-    script3()
+    # script1()
+    # script2()
+    # script3()
     # script4()
-    script5()
+    # script5()
     pass
