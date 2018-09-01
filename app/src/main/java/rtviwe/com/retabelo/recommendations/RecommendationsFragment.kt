@@ -56,16 +56,6 @@ class RecommendationsFragment : MainBaseFragment() {
         initSwipeRefreshLayout()
     }
 
-    override fun onStart() {
-        super.onStart()
-        recommendationsAdapter.startListening()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        recommendationsAdapter.stopListening()
-    }
-
     override fun onResume() {
         super.onResume()
         recommendationsAdapter.notifyItemChanged(clickedItemPosition)
@@ -77,10 +67,10 @@ class RecommendationsFragment : MainBaseFragment() {
 
     private fun initAdapter(query: Query) {
         val config = PagedList.Config.Builder().apply {
-            setPageSize(10)
+            setPageSize(3)
             setPrefetchDistance(20)
             setInitialLoadSizeHint(480)
-            setEnablePlaceholders(true)
+            setEnablePlaceholders(false)
         }.build()
 
         val options = FirestorePagingOptions.Builder<RecipeEntry>().apply {
@@ -101,10 +91,13 @@ class RecommendationsFragment : MainBaseFragment() {
     }
 
     private fun initSearchView() {
+        var isSearchTextEmpty = true
+
         RxSearchView.queryTextChanges(search_view)
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .filter {
-                    !it.isEmpty()
+                    isSearchTextEmpty = it.isEmpty()
+                    !isSearchTextEmpty
                 }
                 .distinctUntilChanged()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -117,7 +110,9 @@ class RecommendationsFragment : MainBaseFragment() {
                 })
 
         search_view.setOnCloseListener {
-            refreshAdapter()
+            if (!isSearchTextEmpty) {
+                refreshAdapter()
+            }
             false
         }
     }
