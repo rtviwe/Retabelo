@@ -112,6 +112,7 @@ class RecommendationsFragment : MainBaseFragment() {
         search_view.setOnCloseListener {
             if (!isSearchTextEmpty) {
                 refreshAdapter()
+                scrollToTop()
             }
             false
         }

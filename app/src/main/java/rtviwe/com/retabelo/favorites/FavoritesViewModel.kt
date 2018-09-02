@@ -25,4 +25,15 @@ class FavoritesViewModel(app: Application) : AndroidViewModel(app) {
             recipesList.subscribe(adapter::submitList)
         }
     }
+
+    fun subscribeFavoritesAdapterBySearch(adapter: FavoritesAdapter, text: String) {
+        launch {
+            val searchedRecipesList: Flowable<PagedList<RecipeEntry>> = RxPagedListBuilder(
+                    recipesDao.getFavoriteRecipesByName("%$text%"),
+                    20
+            ).buildFlowable(BackpressureStrategy.LATEST)
+
+            searchedRecipesList.subscribe(adapter::submitList)
+        }
+    }
 }

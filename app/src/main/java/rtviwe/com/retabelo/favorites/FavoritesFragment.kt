@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jakewharton.rxbinding2.widget.RxSearchView
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.favorites_fragment.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.main.MainBaseFragment
 import rtviwe.com.retabelo.model.recipe.RecipeDao
 import rtviwe.com.retabelo.model.recipe.RecipeDatabase
+import java.util.concurrent.TimeUnit
 
 
 class FavoritesFragment : MainBaseFragment() {
@@ -35,6 +38,7 @@ class FavoritesFragment : MainBaseFragment() {
         viewModel = ViewModelProviders.of(this).get(FavoritesViewModel::class.java)
 
         initRecyclerView()
+        initSearchView()
     }
 
     override fun onStart() {
@@ -52,6 +56,33 @@ class FavoritesFragment : MainBaseFragment() {
         recycler_view_favorites.apply {
             layoutManager = favoritesLayoutManager
             adapter = favoritesAdapter
+        }
+    }
+
+    private fun initSearchView() {
+        var isSearchTextEmpty = true
+
+        RxSearchView.queryTextChanges(search_view)
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .filter {
+                    isSearchTextEmpty = it.isEmpty()
+                    !isSearchTextEmpty
+                }
+                .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe({ searchText ->
+                    viewModel.subscribeFavoritesAdapterBySearch(favoritesAdapter, searchText.toString())
+                }, {
+                    it.printStackTrace()
+                })
+
+        search_view.setOnCloseListener {
+            if (isSearchTextEmpty) {
+                viewModel.subscribeFavoritesAdapter(favoritesAdapter)
+                scrollToTop()
+            }
+            false
         }
     }
 }
