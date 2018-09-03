@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -94,10 +95,10 @@ class FavoritesAdapter(private val fragment: FavoritesFragment)
         }
 
         private fun openDetailsFromFavorites(item: RecipeEntry) {
-            val bundle = Bundle().apply {
-                putString(RecipeDetail.EXTRA_NAME, item.name)
-                putString(RecipeDetail.EXTRA_BODY, item.body)
-            }
+            val bundle = bundleOf(
+                    RecipeDetail.EXTRA_NAME to item.name,
+                    RecipeDetail.EXTRA_BODY to item.body
+            )
             val navController = Navigation.findNavController(fragment.activity!!, R.id.nav_host_fragment)
             navController.navigate(R.id.action_favoritesFragment_to_recipeDetail, bundle)
         }

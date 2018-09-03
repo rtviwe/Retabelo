@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.transaction
 import rtviwe.com.retabelo.R
 
-@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class RecipeDetail : AppCompatActivity() {
 
     companion object {
@@ -35,6 +34,11 @@ class RecipeDetail : AppCompatActivity() {
         }
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(EXTRA_NAME, recipeName)
@@ -44,8 +48,8 @@ class RecipeDetail : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         if (savedInstanceState.getString(EXTRA_NAME) != null && savedInstanceState.getString(EXTRA_BODY) != null) {
-            recipeName = savedInstanceState.getString(EXTRA_NAME)
-            recipeBody = savedInstanceState.getString(EXTRA_BODY)
+            recipeName = savedInstanceState.getString(EXTRA_NAME)!!
+            recipeBody = savedInstanceState.getString(EXTRA_BODY)!!
         }
     }
 }
