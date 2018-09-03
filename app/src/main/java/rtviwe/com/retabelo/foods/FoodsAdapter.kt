@@ -23,9 +23,8 @@ class FoodsAdapter
     }
 
     override fun onBindViewHolder(holder: FoodViewHolder, position: Int) {
-        val item: FoodEntry? = getItem(position)
-        item?.let {
-            holder.bindTo(item)
+        getItem(position)?.let { food ->
+            holder.bindTo(food)
         }
     }
 

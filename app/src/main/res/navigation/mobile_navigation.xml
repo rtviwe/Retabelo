@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/recommendationsFragment">
+    <fragment
+        android:id="@+id/recommendationsFragment"
+        android:name="rtviwe.com.retabelo.recommendations.RecommendationsFragment"
+        android:label="RecommendationsFragment" >
+        <action
+            android:id="@+id/action_recommendationsFragment_to_recipeDetail"
+            app:destination="@id/recipeDetail" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="rtviwe.com.retabelo.favorites.FavoritesFragment"
+        android:label="FavoritesFragment" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_recipeDetail"
+            app:destination="@id/recipeDetail" />
+    </fragment>
+    <activity
+        android:id="@+id/recipeDetail"
+        android:name="rtviwe.com.retabelo.details.RecipeDetail"
+        android:label="RecipeDetail" />
+    <fragment
+        android:id="@+id/foodsFragment"
+        android:name="rtviwe.com.retabelo.foods.FoodsFragment"
+        android:label="FoodsFragment" >
+        <action
+            android:id="@+id/action_foodsFragment_to_addFoodAlertDialog"
+            app:destination="@id/addFoodAlertDialog" />
+    </fragment>
+    <fragment
+        android:id="@+id/addFoodAlertDialog"
+        android:name="rtviwe.com.retabelo.foods.AddFoodAlertDialog"
+        android:label="AddFoodAlertDialog" />
+</navigation>

@@ -61,6 +61,8 @@ dependencies {
     implementation 'androidx.paging:paging-runtime:2.0.0-rc01'
     implementation 'android.arch.paging:rxjava2:1.0.1'
 
+    implementation 'android.arch.navigation:navigation-fragment:1.0.0-alpha05'
+
     implementation 'androidx.core:core-ktx:1.0.0-rc02'
     implementation 'androidx.fragment:fragment-ktx:1.0.0-rc02'
 

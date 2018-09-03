@@ -28,9 +28,8 @@ class FavoritesAdapter(private val fragment: FavoritesFragment)
     }
 
     override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
-        val item: RecipeEntry? = getItem(position)
-        item?.let {
-            holder.bindTo(item)
+        getItem(position)?.let { recipe ->
+            holder.bindTo(recipe)
         }
     }
 
@@ -74,7 +73,6 @@ class FavoritesAdapter(private val fragment: FavoritesFragment)
                         Snackbar.LENGTH_LONG)
             }
         }
-
 
         private fun showSnackbar(message: String, length: Int) {
             Snackbar.make(itemView.rootView.favorites_coordinator_layout, message, length).apply {

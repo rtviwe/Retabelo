@@ -1,65 +1,40 @@
 package rtviwe.com.retabelo.main
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.transaction
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.google.firebase.FirebaseApp
 import com.jakewharton.rxbinding2.support.design.widget.RxBottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import rtviwe.com.retabelo.R
-import rtviwe.com.retabelo.favorites.FavoritesFragment
-import rtviwe.com.retabelo.foods.FoodsFragment
-import rtviwe.com.retabelo.recommendations.RecommendationsFragment
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val currentFragmentTag = "Current fragment"
+    private lateinit var navController: NavController
+    private var currentFragmentId = -1
 
-    private var currentFragmentId = R.id.action_recommendations
-    private var currentFragment: MainBaseFragment? = null
-
+    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         FirebaseApp.initializeApp(this)
 
-        RxBottomNavigationView.itemSelections(bottom_navigation as BottomNavigationView).subscribe {
-            currentFragmentId = it.itemId
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
 
-            if (currentFragmentId != bottom_navigation.selectedItemId) {
-                val fragment = getFragmentFromId(currentFragmentId)
-                currentFragment = fragment
-                setFragmentToContainer(fragment)
-            } else if (currentFragmentId == bottom_navigation.selectedItemId) {
-                scrollFragmentToTop(currentFragment)
+        RxBottomNavigationView.itemSelections(bottom_navigation).subscribe {
+            val selectedItemId = getFragmentIdFromActionId(it.itemId)
+            Log.v("HELP", "SelectedItemId: $selectedItemId cuurentItemId: $currentFragmentId")
+            if (selectedItemId == currentFragmentId) {
+                // scrollFragmentToTop()
+            } else {
+                navController.navigate(selectedItemId)
+                currentFragmentId = selectedItemId
             }
-        }
-
-        currentFragment = getFragmentFromId(currentFragmentId)
-        setFragmentToContainer(currentFragment)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(currentFragmentTag, bottom_navigation.selectedItemId)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        currentFragmentId = savedInstanceState.getInt(currentFragmentTag)
-        currentFragment = getFragmentFromId(currentFragmentId)
-        setFragmentToContainer(currentFragment)
-    }
-
-    private fun getFragmentFromId(id: Int?): MainBaseFragment? {
-        return when(id) {
-            R.id.action_recommendations -> RecommendationsFragment()
-            R.id.action_favorites -> FavoritesFragment()
-            R.id.action_foods -> FoodsFragment()
-            else -> null
         }
     }
 
@@ -67,11 +42,11 @@ class MainActivity : AppCompatActivity() {
         fragment?.scrollToTop()
     }
 
-    private fun setFragmentToContainer(fragment: MainBaseFragment?) {
-        fragment?.let {
-            supportFragmentManager.transaction(allowStateLoss = true) {
-                replace(R.id.main_container, fragment)
-            }
+    private fun getFragmentIdFromActionId(id: Int?)
+        = when(id) {
+            R.id.action_recommendations -> R.id.recommendationsFragment
+            R.id.action_favorites -> R.id.favoritesFragment
+            R.id.action_foods -> R.id.foodsFragment
+            else -> -1
         }
-    }
 }
