@@ -11,7 +11,6 @@ import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.model.recipe.RecipeDao
 import rtviwe.com.retabelo.model.recipe.RecipeDatabase
 import rtviwe.com.retabelo.model.recipe.RecipeEntry
-import rtviwe.com.retabelo.model.recipe.RecipePresenter
 
 class RecipeDetailsFragment : Fragment() {
 
@@ -35,13 +34,11 @@ class RecipeDetailsFragment : Fragment() {
 
         name_of_recipe.text = name
 
-        RecipePresenter.loadWebView(web_view, body)
+        RecipeEntry.loadWebView(web_view, body)
         RecipeEntry.setIconAndItemFavorite(recipesDao, name, favorite_button_in_details)
 
         favorite_button_in_details.setOnClickListener {
             recipeDetailViewModel.changeFavorite(name, body)
         }
     }
-
-
 }

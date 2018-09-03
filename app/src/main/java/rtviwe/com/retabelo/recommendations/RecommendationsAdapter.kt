@@ -1,9 +1,11 @@
 package rtviwe.com.retabelo.recommendations
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
@@ -11,10 +13,10 @@ import com.firebase.ui.firestore.paging.LoadingState
 import kotlinx.android.synthetic.main.recipe_item.view.*
 import kotlinx.android.synthetic.main.recommendations_fragment.*
 import rtviwe.com.retabelo.R
+import rtviwe.com.retabelo.details.RecipeDetail
 import rtviwe.com.retabelo.model.recipe.RecipeDao
 import rtviwe.com.retabelo.model.recipe.RecipeDatabase
 import rtviwe.com.retabelo.model.recipe.RecipeEntry
-import rtviwe.com.retabelo.model.recipe.RecipePresenter
 
 
 class RecommendationsAdapter(private val fragment: RecommendationsFragment,
@@ -65,18 +67,18 @@ class RecommendationsAdapter(private val fragment: RecommendationsFragment,
                     .joinToString(limit = 50, separator = " ")
                     .plus(" ...")
 
-            RecipePresenter.loadWebView(webView, previewText)
+            RecipeEntry.loadWebView(webView, previewText)
             RecipeEntry.setIconAndItemFavorite(recipesDao, item.name, favoriteButton)
 
             itemView.setOnClickListener {
                 fragment.clickedItemPosition = adapterPosition
-                RecipePresenter.openDetailActivity(fragment.context!!, item)
+                openDetailsFromRecommendations(item)
             }
 
             itemView.web_view.setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_UP) {
                     fragment.clickedItemPosition = adapterPosition
-                    RecipePresenter.openDetailActivity(fragment.context!!, item)
+                    openDetailsFromRecommendations(item)
                 }
                 true
             }
@@ -84,6 +86,15 @@ class RecommendationsAdapter(private val fragment: RecommendationsFragment,
             itemView.favorite_button.setOnClickListener {
                 RecipeEntry.changeFavorite(recipesDao, item)
             }
+        }
+
+        private fun openDetailsFromRecommendations(item: RecipeEntry) {
+            val bundle = Bundle().apply {
+                putString(RecipeDetail.EXTRA_NAME, item.name)
+                putString(RecipeDetail.EXTRA_BODY, item.body)
+            }
+            val navController = Navigation.findNavController(fragment.activity!!, R.id.nav_host_fragment)
+            navController.navigate(R.id.action_recommendationsFragment_to_recipeDetail, bundle)
         }
     }
 }

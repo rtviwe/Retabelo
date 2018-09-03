@@ -1,9 +1,11 @@
 package rtviwe.com.retabelo.favorites
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -11,11 +13,11 @@ import kotlinx.android.synthetic.main.favorites_fragment.view.*
 import kotlinx.android.synthetic.main.recipe_item.view.*
 import kotlinx.coroutines.experimental.launch
 import rtviwe.com.retabelo.R
+import rtviwe.com.retabelo.details.RecipeDetail
 import rtviwe.com.retabelo.main.DiffCallback
 import rtviwe.com.retabelo.model.recipe.RecipeDao
 import rtviwe.com.retabelo.model.recipe.RecipeDatabase
 import rtviwe.com.retabelo.model.recipe.RecipeEntry
-import rtviwe.com.retabelo.model.recipe.RecipePresenter
 
 class FavoritesAdapter(private val fragment: FavoritesFragment)
     : PagedListAdapter<RecipeEntry, FavoritesAdapter.FavoriteViewHolder>(DiffCallback<RecipeEntry>()) {
@@ -51,17 +53,17 @@ class FavoritesAdapter(private val fragment: FavoritesFragment)
                     .joinToString(limit = 50, separator = " ")
                     .plus(" ...")
 
-            RecipePresenter.loadWebView(webView, previewText)
+            RecipeEntry.loadWebView(webView, previewText)
 
             favoriteButton.isChecked = true
 
             itemView.setOnClickListener {
-                RecipePresenter.openDetailActivity(fragment.context!!, item)
+                openDetailsFromFavorites(item)
             }
 
             itemView.web_view.setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_UP) {
-                    RecipePresenter.openDetailActivity(fragment.context!!, item)
+                    openDetailsFromFavorites(item)
                 }
                 true
             }
@@ -89,6 +91,15 @@ class FavoritesAdapter(private val fragment: FavoritesFragment)
                     RecipeEntry.changeFavorite(recipesDao, removedLastRecipe!!)
                 }
             }
+        }
+
+        private fun openDetailsFromFavorites(item: RecipeEntry) {
+            val bundle = Bundle().apply {
+                putString(RecipeDetail.EXTRA_NAME, item.name)
+                putString(RecipeDetail.EXTRA_BODY, item.body)
+            }
+            val navController = Navigation.findNavController(fragment.activity!!, R.id.nav_host_fragment)
+            navController.navigate(R.id.action_favoritesFragment_to_recipeDetail, bundle)
         }
     }
 }

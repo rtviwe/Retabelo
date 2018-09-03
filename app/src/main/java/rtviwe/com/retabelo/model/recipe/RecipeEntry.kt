@@ -1,5 +1,6 @@
 package rtviwe.com.retabelo.model.recipe
 
+import android.webkit.WebView
 import android.widget.CheckBox
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -39,6 +40,11 @@ data class RecipeEntry(
             launch {
                 icon.isChecked = recipesDao.findRecipeByName(name) != null
             }
+        }
+
+        fun loadWebView(webView: WebView, text: String) {
+            val htmlData = "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />$text"
+            webView.loadDataWithBaseURL("file:///android_asset/", htmlData, "text/html", "UTF-8", null)
         }
     }
 }

@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
 import com.google.firebase.FirebaseApp
 import com.jakewharton.rxbinding2.support.design.widget.RxBottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -26,15 +27,15 @@ class MainActivity : AppCompatActivity() {
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
 
-        RxBottomNavigationView.itemSelections(bottom_navigation).subscribe {
-            val selectedItemId = getFragmentIdFromActionId(it.itemId)
-            Log.v("HELP", "SelectedItemId: $selectedItemId cuurentItemId: $currentFragmentId")
-            if (selectedItemId == currentFragmentId) {
-                // scrollFragmentToTop()
-            } else {
-                navController.navigate(selectedItemId)
-                currentFragmentId = selectedItemId
-            }
+        NavigationUI.setupWithNavController(bottom_navigation, navController)
+
+        bottom_navigation.setOnNavigationItemSelectedListener {
+            navController.navigate(getFragmentIdFromActionId(it.itemId))
+            true
+        }
+
+        bottom_navigation.setOnNavigationItemReselectedListener {
+            // scrollFragmentToTop()
         }
     }
 
