@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_recommendations"
         android:icon="@drawable/ic_new_releases_black_24dp"
-        android:title="@string/text_recommendations"
-        app:showAsAction="ifRoom" />
+        android:title="@string/text_recommendations" />
     <item
         android:id="@+id/action_favorites"
         android:icon="@drawable/ic_favorite_black_24dp"
-        android:title="@string/text_favorites"
-        app:showAsAction="ifRoom" />
+        android:title="@string/text_favorites" />
     <item
         android:id="@+id/action_foods"
         android:icon="@drawable/ic_receipt_black_24dp"
-        android:title="@string/text_foods"
-        app:showAsAction="ifRoom" />
+        android:title="@string/text_foods"/>
 </menu>

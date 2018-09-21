@@ -67,9 +67,8 @@ class RecommendationsFragment : MainBaseFragment() {
 
     private fun initAdapter(query: Query) {
         val config = PagedList.Config.Builder().apply {
-            setPageSize(3)
-            setPrefetchDistance(20)
-            setInitialLoadSizeHint(480)
+            setPageSize(10)
+            setPrefetchDistance(480)
             setEnablePlaceholders(false)
         }.build()
 

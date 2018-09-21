@@ -1,14 +1,12 @@
 package rtviwe.com.retabelo.main
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.google.firebase.FirebaseApp
-import com.jakewharton.rxbinding2.support.design.widget.RxBottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import rtviwe.com.retabelo.R
 
@@ -16,9 +14,7 @@ import rtviwe.com.retabelo.R
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
-    private var currentFragmentId = -1
 
-    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -37,6 +33,17 @@ class MainActivity : AppCompatActivity() {
         bottom_navigation.setOnNavigationItemReselectedListener {
             // scrollFragmentToTop()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                navController.popBackStack()
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun scrollFragmentToTop(fragment: MainBaseFragment?) {
