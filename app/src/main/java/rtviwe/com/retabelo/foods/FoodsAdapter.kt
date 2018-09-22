@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.food_list_item.view.*
 import rtviwe.com.retabelo.R
 import rtviwe.com.retabelo.main.DiffCallback
 import rtviwe.com.retabelo.model.food.FoodEntry
+import rtviwe.com.retabelo.model.food.FoodType
 
 class FoodsAdapter
     : PagedListAdapter<FoodEntry, FoodsAdapter.FoodViewHolder>(DiffCallback<FoodEntry>()) {
@@ -38,7 +39,21 @@ class FoodsAdapter
         fun bindTo(food: FoodEntry) {
             foodEntry = food
             nameTextView.text = food.name
-            pictureImageView.setImageResource(R.drawable.ic_receipt_black_24dp)
+
+            pictureImageView.setImageResource(when (food.foodType) {
+                FoodType.LIQUID -> R.drawable.liquid
+                FoodType.BREAD -> R.drawable.bread
+                FoodType.ALCOHOL -> R.drawable.alcohol
+                FoodType.FRUIT -> R.drawable.fruit
+                FoodType.VEGETABLE -> R.drawable.vegetable
+                FoodType.GROCERY -> R.drawable.grocery
+                FoodType.FISH -> R.drawable.fish
+                FoodType.MEAT -> R.drawable.meat
+                FoodType.SWEET -> R.drawable.sweet
+                FoodType.CHEESE -> R.drawable.cheese
+                FoodType.CEREALS -> R.drawable.cereals
+                FoodType.OTHER -> R.drawable.other
+            })
         }
     }
 }

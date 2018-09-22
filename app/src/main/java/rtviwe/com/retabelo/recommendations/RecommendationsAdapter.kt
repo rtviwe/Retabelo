@@ -1,6 +1,5 @@
 package rtviwe.com.retabelo.recommendations
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -61,7 +60,10 @@ class RecommendationsAdapter(private val fragment: RecommendationsFragment,
         private val favoriteButton = itemView.favorite_button
 
         fun bindTo(item: RecipeEntry) {
-            nameTextView.text = if (item.name.count() <= 20) item.name else item.name.take(20).plus("...")
+            nameTextView.text = if (item.name.count() <= 20)
+                item.name
+            else
+                item.name.take(20).plus("...")
 
             val previewText = item.body
                     .split(" ")

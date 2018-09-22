@@ -12,7 +12,5 @@ enum class FoodType {
     MEAT,
     SWEET,
     CHEESE,
-    CEREALS,
-    SAUCE,
-    SPICE
+    CEREALS
 }

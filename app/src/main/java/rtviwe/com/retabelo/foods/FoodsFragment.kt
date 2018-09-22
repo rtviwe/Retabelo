@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -17,6 +16,7 @@ import com.jakewharton.rxbinding2.support.design.widget.RxFloatingActionButton
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import kotlinx.android.synthetic.main.foods_fragment.*
 import rtviwe.com.retabelo.R
+import rtviwe.com.retabelo.foods.dialog.AddFoodAlertDialog
 import rtviwe.com.retabelo.main.MainBaseFragment
 import rtviwe.com.retabelo.model.food.FoodDao
 import rtviwe.com.retabelo.model.food.FoodDatabase

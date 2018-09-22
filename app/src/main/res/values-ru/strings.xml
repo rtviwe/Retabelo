@@ -14,4 +14,18 @@
     <string name="selected_food_type">Выбранный тип</string>
     <string name="add_new_food">Добавить</string>
     <string name="search_hint">Найти рецепт</string>
+    <string-array name="food_types">
+        <item>Другое</item>
+        <item>Вода</item>
+        <item>Хлеб</item>
+        <item>Алкоголь</item>
+        <item>Фрукт</item>
+        <item>Овощ</item>
+        <item>Бакалея</item>
+        <item>Рыба</item>
+        <item>Мясо</item>
+        <item>Конфета</item>
+        <item>Сыр</item>
+        <item>Крупа</item>
+    </string-array>
 </resources>

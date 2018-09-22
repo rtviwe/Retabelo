@@ -13,4 +13,19 @@
     <string name="selected_food_type">Selected food type</string>
     <string name="add_new_food">Add</string>
     <string name="search_hint">Find recipe</string>
+    <string name="shows_food_type">Shows food type</string>
+    <string-array name="food_types">
+        <item>Other</item>
+        <item>Liquid</item>
+        <item>Bread</item>
+        <item>Alcohol</item>
+        <item>Fruit</item>
+        <item>Vegetable</item>
+        <item>Grocery</item>
+        <item>Fish</item>
+        <item>Meat</item>
+        <item>Sweet</item>
+        <item>Cheese</item>
+        <item>Cereals</item>
+    </string-array>
 </resources>
