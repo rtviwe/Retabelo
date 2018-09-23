@@ -7,7 +7,6 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.add_food_dialog.view.*
@@ -28,15 +27,12 @@ class AddFoodAlertDialog : DialogFragment() {
         val layoutInflaterAndroid = LayoutInflater.from(context)
         val view = layoutInflaterAndroid.inflate(R.layout.add_food_dialog, null)
 
-        ArrayAdapter.createFromResource(
-                activity!!,
-                R.array.food_types,
-                android.R.layout.simple_spinner_item
-        ).also {
+        SpinnerFoodAdapter(context!!, R.layout.spinner_food_item).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
             view.spinner_food_type.apply {
-                adapter = it // SpinnerFoodAdapter(context, R.id.image_view_spinner, layoutInflater)
+                // Memory leak
+                adapter = it
                 setSelection(0)
             }
         }

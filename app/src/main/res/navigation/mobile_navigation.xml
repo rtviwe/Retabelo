@@ -33,6 +33,6 @@
     </fragment>
     <fragment
         android:id="@+id/addFoodAlertDialog"
-        android:name="rtviwe.com.retabelo.foods.AddFoodAlertDialog"
+        android:name="rtviwe.com.retabelo.foods.dialog.AddFoodAlertDialog"
         android:label="AddFoodAlertDialog" />
 </navigation>

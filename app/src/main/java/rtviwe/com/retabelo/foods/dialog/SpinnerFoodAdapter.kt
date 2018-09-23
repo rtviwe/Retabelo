@@ -12,16 +12,16 @@ import rtviwe.com.retabelo.model.food.FoodTypeConverter
 
 class SpinnerFoodAdapter(
         context: Context,
-        textViewResourceId: Int,
-        private val layoutInflater: LayoutInflater
+        textViewResourceId: Int
 ) : ArrayAdapter<String>(context, textViewResourceId) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return getCustomView(position, convertView, parent)
+        return getCustomView(position, parent)
     }
 
-    private fun getCustomView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val row = layoutInflater.inflate(R.layout.spinner_food_item, parent, false)
+    private fun getCustomView(position: Int, parent: ViewGroup): View {
+        val row = LayoutInflater.from(context)
+                .inflate(R.layout.spinner_food_item, parent, false)
 
         row.image_view_spinner.setImageDrawable(
                 context.getDrawable(FoodTypeConverter.typesDrawable[position]))
